@@ -18,6 +18,7 @@ var rxtension = (function () {
     linkToSeniorLeague();
     fixLogoEditor();
     visualTrainingBalls();
+    forumPagination();
 
     setTimeout(function () {
       playersMatchValue();
@@ -27,7 +28,7 @@ var rxtension = (function () {
   };
 
   var styling = function () {
-    var css = '.quicklink{background-color:#4A4A4A;border-radius:4px;box-shadow:0 0 1px 0 #000;color:#FFF;display:inline-block;margin-left:4px;padding:2px 4px;text-decoration:none;}.quicklink:hover{background-color: #000000;box-shadow: 0 0 2px 0 #000000;color: #FFFFFF;text-decoration: none;}.quicklinks{padding:0 4px 8px;text-align:center;}';
+    var css = '#notifications-wrapper{bottom:-2px;}.quicklink{background-color:#4A4A4A;border-radius:4px;box-shadow:0 0 1px 0 #000;color:#FFF;display:inline-block;margin-left:4px;padding:2px 4px;text-decoration:none;transition:0.5s ease all;}.quicklink:hover{background-color:#000000;box-shadow:0 0 2px 0 #000000;color:#FFFFFF;transform:scale(1.1);text-decoration:none;}.quicklinks{padding:0 4px 8px;text-align:center;}';
     if (typeof GM_addStyle != 'undefined') {
       GM_addStyle(css);
     }
@@ -262,6 +263,38 @@ var rxtension = (function () {
       }
     }
     return player;
+  };
+
+  var forumPagination = function () {
+    var url = window.location.href.split('&');
+
+    if (url[1] == 'sub=topics') {
+      var link, counterDiv, text, messageCount, pageQuantity, html, limit;
+      var posts = document.querySelectorAll('#topics-list > dd');
+
+      for (var i = 0; i < posts.length; i++) {
+        link = posts[i].querySelector('.topics-col-title').querySelector('a').getAttribute('href');
+        counterDiv = posts[i].querySelector('.topics-col-counter');
+        text = (counterDiv.innerText || counterDiv.textContent).split(' / ');
+        messageCount = parseInt(text[1]);
+        pageQuantity = Math.floor(parseInt(messageCount) / 50);
+        
+        if (pageQuantity > 0 && messageCount > 50) {
+          html = '';
+          limit = pageQuantity > 5 ? 5 : (pageQuantity + 1);
+          for (var j = 2; j < limit; j++) {
+            html += '<a href="'+(link)+'&offset='+((j-1)*50)+'" title="Ir a p&aacute;gina '+(j)+'">'+(j)+'</a>&#160;';
+          }
+          if (pageQuantity > 4) {
+            html += '<a href="'+(link)+'&offset='+(messageCount%50 == 0? messageCount-50:pageQuantity*50)+'" title="Ir a &uacute;ltima p&aacute;gina">&#187;</a>&#160;';
+          }
+          if (pageQuantity > 1) {
+            html = '['+(html)+']';
+          }
+          counterDiv.insertAdjacentHTML('beforeend',html);
+        }
+      }
+    }
   };
 
   return {
