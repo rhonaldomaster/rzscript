@@ -19,6 +19,7 @@ var rxtension = (function () {
     fixLogoEditor();
     visualTrainingBalls();
     forumPagination();
+    renderCCBar();
 
     setTimeout(function () {
       playersMatchValue();
@@ -114,7 +115,7 @@ var rxtension = (function () {
       {text: 'Lesiones/Sanciones', title:'Ver Lesionados/Sancionados',url:'?p=players&sub=unavailable'},
       {text: 'Reporte entr.', title:'Ver el Reporte de Entrenamiento',url:'?p=training_report'},
       {text: 'Entrenamiento', title:'Ir al Entrenamiento General',url:'?p=training'},
-      {text: 'MZ Plus', title:'Skiller MZ Plus',url:'http://www.mzplus.com.ar/p'},
+      {text: 'MZ Plus', title:'Skiller MZ Plus',url:'http://mzplus.startlogic.com/p'},
       {text: 'Imgur', title:'Ir a Imgur',url:'http://imgur.com/'}
     ];
     createButtonLinks('.','quicklinks',document.querySelector('#contentDiv'),links,true);
@@ -288,6 +289,210 @@ var rxtension = (function () {
           counterDiv.insertAdjacentHTML('beforeend',html);
         }
       }
+    }
+  };
+
+  var getCCButtons = function () {
+    var html =
+      '<div>'
+        +'<div class="mzbtn buttondiv button_account" title="Insertar Tabla LA-liga">'
+          +'<span class="buttonClassMiddle" style="white-space: nowrap" id="btnTabla">Tabla LA/liga</span><span class="buttonClassRight">&nbsp;</span>'
+        +'</div>'
+        + '<div class="mzbtn buttondiv button_account" title="Subir im&aacute;genes a ImgUr">'
+          +'<span class="buttonClassMiddle" style="white-space: nowrap" id="upImg">ImgUr</span><span class="buttonClassRight">&nbsp;</span>'
+        +'</div>'
+        + '<div class="mzbtn buttondiv button_account" title="Borrar texto del area de mensaje">'
+          +'<span class="buttonClassMiddle js-empty-post-textarea" style="white-space: nowrap">Vaciar</span><span class="buttonClassRight">&nbsp;</span>'
+        +'</div>'
+        + '<div class="js-icons-container">'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/icon_arrow.gif" alt=">"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/22-good.gif" title="(y)" alt="(y)"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/23-bad.gif" title="(n)" alt="(n)"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/wtf.gif" height="20px" title="wtf" alt="wtf"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/fail2.gif" height="20px" title="fail" alt="fail"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/repost.gif" height="20px" title="repost" alt="repost"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/cricri.gif" title="cri" alt="cri"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/nelson.gif" title="ha-ha" alt="ha-ha"/>'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/icon_smile.gif" title=":)" alt=":)"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/ya.gif" title=":D" alt=":D"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/jao.gif" title="D" alt="D"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/icon_xd.gif" title="xD" alt="xD"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/bu.gif" title=":/" alt=":/"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/sad.gif" title=":(" alt=":("/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/icon_crying.gif" title=":*(" alt=":*("/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/07-icon_confused.gif" title=":S" alt=":S"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/thshifty.gif" title="erm" alt="erm"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/08-icon_rolleyes.gif" title="8-)" alt="8-)"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/09-.png" title="¬¬" alt="¬¬"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/porfi.png" title="porfi" alt="porfi"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/icon_eek.gif" title="O.O" alt="O.O"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/uhm.gif" title="_hm" alt="_hm"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/wooh.gif" title="evil" alt="evil"/><br />'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/icon_evil.gif" title=">:(" alt=">:("/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/icon_twisted.gif" title=">:)" alt=">:)"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/winky.gif" title="flirt" alt="flirt"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/tong.gif" title=":P" alt=":P"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/stare.gif" title="|-(" alt="|-("/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/icon_wink.gif" title=";)" alt=";)"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/icon_cool.gif" title="(h)" alt="(h)"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/19-uu.png" title="u.u" alt="u.u"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/shh.gif" title="shh" alt="shh"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/nu.gif" title="nana" alt="nana"/>'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/24-rock.gif" height="23px" title="rock" alt="rock"/>'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/protest.gif" title="grr" alt="grr"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/jaja.gif" height="23px" title="jaja" alt="jaja"/>'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/eeh.gif" title="eah" alt="eah"/>'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/clap.gif" title="clap" alt="clap"/>'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/bla.gif" title="bla" alt="bla"/>'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/ele.gif" title="l" alt="l"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/mad.gif" title="grr" alt="grr"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/angel.gif" title="angel" alt="angel"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/devil.gif" title="diablo" alt="diablo"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/baba.gif" title="baba" alt="baba"/>'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/fool.gif" height="23px" title="x)" alt="x)"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/plz.gif" title="plz" alt="plz"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/umm.gif" title="umm" alt="umm"/>'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/facepalm.gif" title="facepalm" alt="facepalm"/>&nbsp;'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/sleep.gif" title="zzz" alt="zzz"/>'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/36-omm.gif" title="om" alt="om"/>'
+          + '<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/iconos/uh.gif" title="uh" alt="uh"/>'
+        + '</div>'
+        + '<div id="contenedor" style="border: 5px solid green;font-weight:bold;display:none;width:430px; padding:5px;margin:auto">'
+          + 'Arrastre su imagen a este espacio <button id="btnUpImg">O clickee ac&aacute; para elegirla</button> <input style="visibility: collapse; width: 0px;" id="subidor" type="file">'
+          + '<p id="error" style="font-weight:bold;color:red">Error. El archivo seleccionado no es una imagen.</p><p id="pe">Cargando imagen <img src="http://managerzone.se/img/loading.gif"> &nbsp;espere por favor.</p><p id="link"></p>'
+        +'</div>'
+      +'</div>';
+    return html;
+  };
+
+  var cancelEvent = function (ev) {
+    ev.preventDefault();
+  };
+
+  var upload = function (file) {
+    var link = document.querySelector('#link');
+    var error = document.querySelector('#error');
+    var pe = document.querySelector('#pe');
+    if (!file || !file.type.match(/image.*/)) {
+      link.style.display = 'none';
+      pe.style.display = 'none';
+      error.style.display = 'block';
+    }
+    else {
+      link.style.display = 'none';
+      pe.style.display = 'block';
+      error.style.display = 'none';
+
+      var formData = new FormData();
+      formData.append('image', file);
+      var ajax = $.ajax({
+        type: 'post',
+        url: 'https://api.imgur.com/3/upload.json',
+        data: formData,
+        headers: {
+          "authorization": "Client-ID 4306d20a28c0e7a"
+        }
+      });
+      ajax.done(function (data) {
+        link.style.display = 'block';
+        pe.style.display = 'none';
+        error.style.display = 'none';
+
+        var json = JSON.parse(data);
+        var url = json.data.link;
+        link.innerHTML = '<a href="'+(url)+'">'+(url)+'</a>';
+      });
+    }
+  };
+
+  var uploadFile = function (ev) {
+    ev.preventDefault();
+    upload(event.dataTransfer.files[0]);
+  };
+
+  var handleUploadClick = function (ev) {
+    ev.preventDefault();
+    document.querySelector('#subidor').click();
+  };
+
+  var postItem = function (html) {
+    var textarea = document.querySelector('#forum_form_message');
+    var scrollTop = textarea.scrollTop;
+    var selectionStart = textarea.selectionStart;
+    var selectionEnd = textarea.selectionEnd;
+
+    textarea.value = textarea.value.substr(0, selectionStart) + html + textarea.value.substr(selectionEnd, textarea.value.length);
+    textarea.scrollTop = scrollTop;
+  };
+
+  var postSmiley = function (ev) {
+    var img = ev.target;
+    var url = img.getAttribute('src');
+    var html = '[image url='+url+']';
+    postItem(html);
+  };
+
+  var postTable = function (ev) {
+    var html = '';
+    var data = prompt('Ingrese el usuario para la liga oficial o el ID de la liga amistosa');
+    if (data) {
+      if (data == '') {
+        alert('No ha ingresado correctamente el usuario/id. Vuelva a intentarlo, por favor.');
+      }
+      else {
+        if (isNaN(data)) {
+          html = '[image url=http://mzplus.startlogic.com/imgdin_liga?user=' + data + ']';
+        }
+        else {
+          html = '[image url=http://mzplus.startlogic.com/imgdin_liga?user=&idla=' + data + ']'
+        }
+        postItem(html);
+      }
+    }
+  };
+
+  var emptyPostTextarea = function (ev) {
+    var textarea = document.querySelector('#forum_form_message');
+    textarea.value = '';
+  };
+
+  var toggleUploadForm = function (ev) {
+    var container = document.querySelector('#contenedor');
+    if (container.style.display == 'none') {
+      if (window.opera) {
+        container.innerHTML = '<span style="color:red;padding:3px"> Opera no soporta la posibilidad de subir imágenes directamente. <br /><span style="color:green">&nbsp;Firefox sí, apoya una web libre! <a href="https://affiliates.mozilla.org/link/banner/12520/3/18"><img src="http://affiliates-cdn.mozilla.org/media/uploads/banners/download-small-blue-ES.png" class="cursor" /></a></span></span>';
+      }
+      container.style.display = 'block';
+    }
+    else {
+      container.style.display = 'none';
+    }
+  };
+
+  var setCCBarEvents = function () {
+    $(document).on('click','#btnUpImg',handleUploadClick)
+      .on('click','.js-icons-container img',postSmiley)
+      .on('click','#btnTabla',postTable)
+      .on('click','#upImg',toggleUploadForm)
+      .on('click','.js-empty-post-textarea',emptyPostTextarea)
+      .on('dragover','#contenedor',cancelEvent)
+      .on('drop','#contenedor',uploadFile)
+      .on('change','#subidor',function () {
+        upload(this.files[0]);
+      });
+  };
+
+  var renderCCBar = function () {
+    var url = window.location.href.split('&');
+    if (url[1] == 'sub=topics') {
+      setTimeout(function () {
+        var container = document.querySelector('.bbcode');
+        if (container) {
+          var html = getCCButtons();
+          container.insertAdjacentHTML('afterbegin',html);
+          setCCBarEvents();
+        }
+      },1000);
     }
   };
 
