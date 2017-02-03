@@ -53,9 +53,7 @@ var rxtension = (function () {
     var wrapper = document.querySelector('#match-info-wrapper');
 
     if (wrapper) {
-      var h1 = wrapper.querySelector('h1');
-      var text = h1.innerHTML;
-      var i18nLeague = ['Liga','League'];
+      var h1 = wrapper.querySelector('h1'), text = h1.innerHTML, i18nLeague = ['Liga','League'];
       if (i18nLeague.indexOf(text) > -1) {
         h1.innerHTML = '<a href="/?p=league&type=senior">'+text+'</a>';
       }
@@ -77,8 +75,7 @@ var rxtension = (function () {
 
   var createButtonLinks = function (selectorType,selector,wrapper,links,prepend) {
     var container = document.querySelector(selectorType+selector);
-    var target = '';
-    var html = '<div '+(selectorType=='.' ? 'class':'id')+'="'+selector+'">';
+    var target = '', html = '<div '+(selectorType=='.' ? 'class':'id')+'="'+selector+'">';
 
     for (var i = 0; i < links.length; i++) {
       target = links[i].url.indexOf('?p=')<0 ? ' target="_blank"':'';
@@ -127,9 +124,9 @@ var rxtension = (function () {
     setTimeout(function () {
       var container = document.querySelector('#training_report');
       if (container) {
-        var table = container.childNodes[2];
-        var tbody = table.querySelector('tbody');
+        var table = container.childNodes[2], tbody = table.querySelector('tbody');
         var cell, balls = 0;
+
         for (var i = 0; i < tbody.rows.length; i++) {
           cell = tbody.rows[i].cells[4];
           balls = cell.querySelectorAll('img').length;
@@ -172,9 +169,7 @@ var rxtension = (function () {
       'INR': 0.17,
       'MZ': 1
     };
-    var toSEK = 1 / currencies[currency];
-    var locale = 0;
-    var cCurrency = localStorage.getItem('moneda');
+    var locale = 0, toSEK = 1 / currencies[currency], cCurrency = localStorage.getItem('moneda');
 
     if (cCurrency) {
       locale = Math.round( (1 / currencies[cMoneda]) * (value / toSEK) );
@@ -186,8 +181,7 @@ var rxtension = (function () {
   };
 
   var formatMoney = function (value) {
-    var result = '';
-    var number = value.toString();
+    var result = '', number = value.toString();
 
     while (number.length > 3) {
       result = '.' + number.substr(number.length - 3) + result;
@@ -219,10 +213,10 @@ var rxtension = (function () {
         data: {sport_id: sports.indexOf(ajaxSport), team_id: teamId}
       });
       ajax.done(function (data) {
-        var link;
+        var link, playerData = null, playerId = 0, playing11Value = 0, playing11 = 0, playerValue = 0;
+
         var firstRow = teamTable.rows[0];
         var tableBody = teamTable.querySelector('tbody');
-        var playerData = null, playerId = 0, playing11Value = 0, playing11 = 0;
         var currency = data.getElementsByTagName('TeamPlayers')[0].getAttribute('teamCurrency');
         var tableFoot = teamTable.querySelector('tfoot');
         var totalsRow = tableFoot.rows[1];
@@ -238,7 +232,7 @@ var rxtension = (function () {
             playerData = getPlayerData(data,playerId);
             if (playerData) {
               playing11 += 1;
-              var playerValue = toLocaleCurrency(playerData.getAttribute('value'),currency);
+              playerValue = toLocaleCurrency(playerData.getAttribute('value'),currency);
               tableBody.rows[i].innerHTML = '<td style="width:62px;text-align:right;padding-right:15px">'+(formatMoney(playerValue))+'</td>' + tableBody.rows[i].innerHTML;
               if (playing11<12) {
                 playing11Value += playerValue;
@@ -278,7 +272,7 @@ var rxtension = (function () {
         text = (counterDiv.innerText || counterDiv.textContent).split(' / ');
         messageCount = parseInt(text[1]);
         pageQuantity = Math.floor(parseInt(messageCount) / 50);
-        
+
         if (pageQuantity > 0 && messageCount > 50) {
           html = '';
           limit = pageQuantity > 5 ? 5 : (pageQuantity + 1);
