@@ -523,6 +523,42 @@ var rxtension = (function () {
     }
   };
 
+  var previewResults = function () {
+    var url = window.location.href.split('&');
+    if (url[1]=='sub=scheduled') {
+      var container = document.querySelector('#results-fixtures-header');
+      var html = '<div class="js-preview-results" style="float:right;cursor:pointer;border:2px solid #2A4CB0;width:20px;height:20px;padding:4px 0 0 4px;">'
+        +'<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/tmp_btn/fill-180_zps881d90f2.png" title="Ver resultados" alt="Ver resultados"/>'
+      +'</div>';
+      container.insertAdjacentHTML('afterbegin',html);
+      $(document).on('click','.js-preview-results',getResults);
+    }
+  };
+
+  var getResults = function (ev) {
+    var matches = document.querySelectorAll('#fixtures-results-list > dd');
+    var isPlaying = false, matchId, links, ajax;
+    for (var i = 0; i < matches.length; i++) {
+      links = matches[i].querySelectorAll('dl.action-panel a');
+      isPlaying = links.length > 1;
+      if (isPlaying) {
+        matchId = links[0].href.split('&')[3].split('=')[1];
+        ajax = $.ajax({
+          url: '/xml/match_info.php',
+          type: 'GET',
+          data: {sport_id: sports.indexOf(ajaxSport), match_id: matchId}
+        });
+        (function (matchBlock) {
+          ajax.done(function (data) {
+            var score = {local: data.getElementsByTagName('Team')[0].getAttribute('goals'), visitor: data.getElementsByTagName('Team')[1].getAttribute('goals')};
+            var matchScore = matchBlock.querySelector('.score-cell-wrapper > a');
+            matchScore.innerHTML = score.local+' - '+score.visitor;
+          });
+        })(matches[i]);
+      }
+    }
+  };
+
   return {
     init: init
   };
