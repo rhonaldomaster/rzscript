@@ -7,7 +7,7 @@
 // @version        0.1
 // @copyright      GNU/GPL v3
 // @authors        rhonaldomaster
-// @credits        c_c (c_c@managerzone.com) | serbocapo (serbocapo@managerzone.com)
+// @credits        MZScript por c_c (c_c@managerzone.com) | serbocapo (serbocapo@managerzone.com)
 // ==/UserScript==
 var rxtension = (function () {
   var sports = ['','soccer','hockey'];
@@ -20,6 +20,8 @@ var rxtension = (function () {
     visualTrainingBalls();
     forumPagination();
     renderCCBar();
+    renderPostQuicklinks();
+    previewResults();
 
     setTimeout(function () {
       playersMatchValue();
@@ -56,7 +58,7 @@ var rxtension = (function () {
     if (wrapper) {
       var h1 = wrapper.querySelector('h1'), text = h1.innerHTML, i18nLeague = ['Liga','League'];
       if (i18nLeague.indexOf(text) > -1) {
-        h1.innerHTML = '<a href="/?p=league&type=senior">'+text+'</a>';
+        h1.innerHTML = '<a href="?p=league&type=senior">'+text+'</a>';
       }
     }
   };
@@ -460,7 +462,7 @@ var rxtension = (function () {
     var container = document.querySelector('#contenedor');
     if (container.style.display == 'none') {
       if (window.opera) {
-        container.innerHTML = '<span style="color:red;padding:3px"> Opera no soporta la posibilidad de subir imágenes directamente. <br /><span style="color:green">&nbsp;Firefox sí, apoya una web libre! <a href="https://affiliates.mozilla.org/link/banner/12520/3/18"><img src="http://affiliates-cdn.mozilla.org/media/uploads/banners/download-small-blue-ES.png" class="cursor" /></a></span></span>';
+        container.innerHTML = '<span style="color:red;padding:3px"> Opera no soporta la posibilidad de subir imágenes directamente. <br /><span style="color:green">&nbsp;Firefox s&iacute;, apoya una web libre! <a href="https://affiliates.mozilla.org/link/banner/12520/3/18"><img src="http://affiliates-cdn.mozilla.org/media/uploads/banners/download-small-blue-ES.png" class="cursor" /></a></span></span>';
       }
       container.style.display = 'block';
     }
@@ -493,6 +495,31 @@ var rxtension = (function () {
           setCCBarEvents();
         }
       },1000);
+    }
+  };
+
+  var renderPostQuicklinks = function () {
+    var url = window.location.href.split('&');
+    if (url[1] == 'sub=topic') {
+      var posts = document.querySelectorAll('.forum_body');
+      var forum = url[3].replace('forum_id=', '');
+      var author, authorContainer, authorId, authorName, authorTeamId, badgeContainer, html = '';
+      var titles = ['Ir al GB', 'Posts recientes', 'Invitar amistoso'];
+
+      for (var i = 0; i < posts.length; i++) {
+        author = posts[i].querySelector('.post-author');
+        authorContainer = author.querySelector('a');
+        authorId = authorContainer.href.split('&')[1].replace('uid=','');
+        authorName = authorContainer.innerHTML;
+        badgeContainer = posts[i].querySelector('.forum-post-badges');
+        authorTeamId = badgeContainer.querySelector('img').src.split('=')[1].replace('&sport','');
+
+        html = '<a class="quicklink" href="/?p=guestbook&uid='+authorId+'" title="'+titles[0]+'">Guestbook</a>'
+          +'<a class="quicklink" href="?p=forum&sub=search&search_keywords=&search_keyword_type=any&search_author='+authorName+'&search_forum='+forum+'&search_range=7&search_sort_by=post_date&search_sort_order=desc" title="'+titles[1]+'">Posts</a>'
+          +'<a class="quicklink" href="?p=team&sub=challenge&tid='+authorTeamId+'" title="'+titles[2]+'">Amistosos</a>';
+
+        author.insertAdjacentHTML('beforeend',html);
+      }
     }
   };
 
