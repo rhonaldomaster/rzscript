@@ -486,7 +486,7 @@ var rxtension = (function () {
 
   var renderCCBar = function () {
     var url = window.location.href.split('&');
-    if (url[1] == 'sub=topics') {
+    if (url[1] == 'sub=topics' || url[1] == 'sub=topic') {
       setTimeout(function () {
         var container = document.querySelector('.bbcode');
         if (container) {
@@ -504,7 +504,8 @@ var rxtension = (function () {
       var posts = document.querySelectorAll('.forum_body');
       var forum = url[3].replace('forum_id=', '');
       var author, authorContainer, authorId, authorName, authorTeamId, badgeContainer, html = '';
-      var titles = ['Ir al GB', 'Posts recientes', 'Invitar amistoso'];
+      var titles = ['Ir al GB', 'Posts recientes', 'Invitar amistoso'],
+        texts = ['Guestbook','Posts','Amistosos'];
 
       for (var i = 0; i < posts.length; i++) {
         author = posts[i].querySelector('.post-author');
@@ -514,9 +515,9 @@ var rxtension = (function () {
         badgeContainer = posts[i].querySelector('.forum-post-badges');
         authorTeamId = badgeContainer.querySelector('img').src.split('=')[1].replace('&sport','');
 
-        html = '<a class="quicklink" href="/?p=guestbook&uid='+authorId+'" title="'+titles[0]+'">Guestbook</a>'
-          +'<a class="quicklink" href="?p=forum&sub=search&search_keywords=&search_keyword_type=any&search_author='+authorName+'&search_forum='+forum+'&search_range=7&search_sort_by=post_date&search_sort_order=desc" title="'+titles[1]+'">Posts</a>'
-          +'<a class="quicklink" href="?p=team&sub=challenge&tid='+authorTeamId+'" title="'+titles[2]+'">Amistosos</a>';
+        html = '<a class="quicklink" href="/?p=guestbook&uid='+authorId+'" title="'+titles[0]+'">'+texts[0]+'</a>'
+          +'<a class="quicklink" href="?p=forum&sub=search&search_keywords=&search_keyword_type=any&search_author='+authorName+'&search_forum='+forum+'&search_range=7&search_sort_by=post_date&search_sort_order=desc" title="'+titles[1]+'">'+texts[1]+'</a>'
+          +'<a class="quicklink" href="?p=team&sub=challenge&tid='+authorTeamId+'" title="'+titles[2]+'">'+texts[2]+'</a>';
 
         author.insertAdjacentHTML('beforeend',html);
       }
@@ -537,7 +538,7 @@ var rxtension = (function () {
 
   var getResults = function (ev) {
     var matches = document.querySelectorAll('#fixtures-results-list > dd');
-    var isPlaying = false, matchId, links, ajax;
+    var isPlaying = false, matchId, links, ajax, teamId;
     for (var i = 0; i < matches.length; i++) {
       links = matches[i].querySelectorAll('dl.action-panel a');
       isPlaying = links.length > 1;
@@ -552,7 +553,27 @@ var rxtension = (function () {
           ajax.done(function (data) {
             var score = {local: data.getElementsByTagName('Team')[0].getAttribute('goals'), visitor: data.getElementsByTagName('Team')[1].getAttribute('goals')};
             var matchScore = matchBlock.querySelector('.score-cell-wrapper > a');
+            var myTeamId = matchScore.href.split('&')[2].split('=')[1];
             matchScore.innerHTML = score.local+' - '+score.visitor;
+            if (score.local == score.visitor) {
+              matchScore.className = 'yellow';
+            }
+            else if (myTeamId == data.getElementsByTagName('Team')[0].getAttribute('id')) {
+              if (score.local > score.visitor) {
+                matchScore.className = 'green';
+              }
+              else {
+                matchScore.className = 'red';
+              }
+            }
+            else if (myTeamId == data.getElementsByTagName('Team')[1].getAttribute('id')) {
+              if (score.local < score.visitor) {
+                matchScore.className = 'green';
+              }
+              else {
+                matchScore.className = 'red';
+              }
+            }
           });
         })(matches[i]);
       }
