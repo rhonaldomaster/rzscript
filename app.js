@@ -22,6 +22,7 @@ var rxtension = (function () {
     renderCCBar();
     renderPostQuicklinks();
     previewResults();
+    getCountryAndDiv();
 
     setTimeout(function () {
       playersMatchValue();
@@ -576,6 +577,81 @@ var rxtension = (function () {
             }
           });
         })(matches[i]);
+      }
+    }
+  };
+
+  var getCountryAndDiv = function () {
+    var url = window.location.href.split('=');
+    var cups = ['private_cup&sub','cup&sub'],
+      extraLeagues = ['u18','u21','u23','world','u18_world'],
+      friendlyLeagues = ['friendlyseries&sub'];
+    var containerSelector, clickedElementSelector;
+
+    if (cups.indexOf(url[1]) > -1 || friendlyLeagues.indexOf(url[1]) > -1) {
+      if (cups.indexOf(url[1]) > -1) {
+        containerSelector = '#cup-div', clickedElementSelector = '#ui-id-4';
+      }
+      else if (friendlyLeagues.indexOf(url[1]) > -1) {
+        containerSelector = '#friendly-series-div', clickedElementSelector = '#ui-id-2';
+        if (url[2] == 'standings&fsid') {
+          setTimeout(function () {
+            renderDivAndCountryButton();
+          },1000);
+        }
+      }
+
+      $(document).on('click','.js-view-div-country',function () {
+        if (cups.indexOf(url[1]) > -1) {
+          renderDivAndCountry('#group-stages');
+        }
+        else if (friendlyLeagues.indexOf(url[1]) > -1) {
+          renderDivAndCountry('#ui-tabs-2');
+        }
+      });
+
+      $(containerSelector).on('click',clickedElementSelector,function () {
+        setTimeout(function () {
+          renderDivAndCountryButton();
+        },1000);
+      });
+    }
+  };
+
+  var renderDivAndCountryButton = function () {
+    var tableHeader = document.querySelectorAll('.nice_table thead tr.seriesHeader')[0];
+    var firstCell = tableHeader.cells[0];
+
+    firstCell.innerHTML = '<img class="js-view-div-country" src="http://i915.photobucket.com/albums/ac355/ccc_vader/bot/property-blue_zps058ec638.png" title="Ver divisi&oacute;n y pa&iacute;s" style="cursor:pointer;">';
+  };
+
+  var renderDivAndCountry = function (containerSelector) {
+    var container = document.querySelector(containerSelector);
+    var row, link, teamId, ajax;
+
+    if (container) {
+      var rows = container.querySelectorAll('.nice_table tbody > tr');
+      for (var i = 0; i < rows.length; i++) {
+        row = rows[i];
+        link = row.querySelectorAll('a')[0];
+        teamId = link.href.split('&')[1].replace('tid=', '');
+        ajax = $.ajax({
+          url: '/xml/manager_data.php',
+          type: 'GET',
+          data: {sport_id: sports.indexOf(ajaxSport), team_id: teamId}
+        });
+        (function (container) {
+          ajax.done(function (data) {
+            var divName = data.getElementsByTagName('Team')[0].getAttribute('seriesName'), country = data.getElementsByTagName('UserData')[0].getAttribute('countryShortname');
+            var divId = data.getElementsByTagName('Team')[0].getAttribute('seriesId'), idTeam = data.getElementsByTagName('Team')[0].getAttribute('teamId');
+
+            var countryHtml = '<img src="http://static.managerzone.com/nocache-560/img/flags/s_'+(country.toLowerCase())+'.gif">&nbsp;';
+            var divHtml = '&nbsp;- &gt; <a href="?p=league&type=senior&sid='+divId+'&tid='+idTeam+'">'+divName+'</a>';
+
+            container.insertAdjacentHTML('beforeend',divHtml);
+            container.insertAdjacentHTML('afterbegin',countryHtml);
+          });
+        })(link.parentNode);
       }
     }
   };
