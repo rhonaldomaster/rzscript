@@ -23,6 +23,7 @@ var rxtension = (function () {
     renderPostQuicklinks();
     previewResults();
     getCountryAndDiv();
+    addComparators();
 
     setTimeout(function () {
       playersMatchValue();
@@ -652,6 +653,44 @@ var rxtension = (function () {
             container.insertAdjacentHTML('afterbegin',countryHtml);
           });
         })(link.parentNode);
+      }
+    }
+  };
+
+  var addComparators = function () {
+    var url = window.location.href;
+
+    if (url.indexOf('scheduled') > -1 || url.indexOf('played') > -1) {
+      var rows = document.querySelectorAll('#fixtures-results-list > dd');
+      var isPlayed = url.indexOf('played') != -1 ? 1 : 0,
+        myTeamScheduled = rows[0].querySelectorAll('a')[0] ? false : true,
+        startIndex = (!isPlayed && myTeamScheduled) ? 1 : 0;
+      var html1 = '', html2 = '',
+        img1 = '<img src="http://www.mzcompare.com/static/img/mzc.png" border="0" title="Comparar equipos con MZ Compare">',
+        img2 = '<img src="http://i.imgur.com/FCw8KRW.png" border="0" title="Mirar rival en MZPlus">';
+      var match, links, matchId, myTeamId, rivalId;
+
+      for (var i = startIndex; i < rows.length; i++) {
+        match = rows[i];
+        if (match.className != 'group') {
+          rivalId = 0, html1 = '', html2 = '';
+          links = match.querySelectorAll('dd.teams-wrapper a');
+          myTeamId = links[1].href.split('&')[2].split('=')[1];
+          matchId = links[1].href.split('&')[3].split('=')[1];
+
+          if (links[0].href.indexOf('&tid') > -1) {
+            rivalId = links[0].href.split('=')[2];
+          }
+          else if(links[2].href.indexOf('&tid') > -1) {
+            rivalId = links[2].href.split('=')[2];
+          }
+
+          html1 = '<a class="matchIcon" href="http://www.mzcompare.com/match?played='+isPlayed+'&tid='+myTeamId+'&mid='+matchId+'" target="_blank" style="width:22px;">'+img1+'</a>';
+          if (rivalId > 0) {
+            html2 = '<a class="matchIcon" href="http://mzplus.startlogic.com/i?eq='+rivalId+'" target="_blank" style="width:22px;">'+img2+'</a>';
+          }
+          match.querySelector('.action-panel dd').insertAdjacentHTML('beforeend',html1+html2);
+        }
       }
     }
   };
