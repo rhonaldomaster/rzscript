@@ -24,6 +24,7 @@ var rxtension = (function () {
     previewResults();
     getCountryAndDiv();
     addComparators();
+    renderTaxCalculationButton();
 
     setTimeout(function () {
       playersMatchValue();
@@ -33,7 +34,7 @@ var rxtension = (function () {
   };
 
   var styling = function () {
-    var css = '#notifications-wrapper{bottom:-2px;}.quicklink{background-color:#4A4A4A;border-radius:4px;box-shadow:0 0 1px 0 #000;color:#FFF;display:inline-block;margin-left:4px;padding:2px 4px;text-decoration:none;transition:0.5s ease all;}.quicklink:hover{background-color:#000000;box-shadow:0 0 2px 0 #000000;color:#FFFFFF;transform:scale(1.1);text-decoration:none;}.quicklinks{padding:0 4px 8px;text-align:center;}';
+    var css = '#notifications-wrapper{bottom:-2px;}.quicklink{background-color:#4A4A4A;border:0;border-radius:4px;box-shadow:0 0 1px 0 #000;color:#FFF;cursor:pointer;display:inline-block;margin-left:4px;padding:2px 4px;text-decoration:none;transition:0.2s ease-in-out all;}.quicklink:hover{background-color:#000000;box-shadow:0 0 2px 0 #000000;color:#FFFFFF;transform:scale(1.1);text-decoration:none;}.quicklinks{padding:0 4px 8px;text-align:center;}#fluid-menu-opener > div.sport-line,#top-wrapper-sport-line{background:#5d5b5f none repeat scroll 0 0;}';
     if (typeof GM_addStyle != 'undefined') {
       GM_addStyle(css);
     }
@@ -103,7 +104,7 @@ var rxtension = (function () {
       {text: 'FED', title: 'Federaciones', url: '?p=forum&sub=topics&forum_id=251&sport=soccer'},
       {text: 'HDC', title: 'Hablemos de copas', url: '?p=forum&sub=topics&forum_id=252&sport=soccer'}
     ];
-    createButtonLinks('.','js-forum-buttons',document.querySelector('#notifications-wrapper'),links,false);
+    createButtonLinks('.','js-forum-buttons .quicklinks',document.querySelector('#notifications-wrapper'),links,false);
   };
 
   var quickLinks = function () {
@@ -197,13 +198,15 @@ var rxtension = (function () {
   };
 
   var playersMatchValue = function () {
-    var teamsDiv = document.querySelectorAll('.team-table');
-    var links;
+    if (ajaxSport == 'soccer') {
+      var teamsDiv = document.querySelectorAll('.team-table');
+      var links;
 
-    if (teamsDiv) {
-      for (var i = 0; i < teamsDiv.length; i++) {
-        links = teamsDiv[i].querySelectorAll('a');
-        renderTeamValue(links[0].href.split('&')[1].split('=')[1], i);
+      if (teamsDiv) {
+        for (var i = 0; i < teamsDiv.length; i++) {
+          links = teamsDiv[i].querySelectorAll('a');
+          renderTeamValue(links[0].href.split('&')[1].split('=')[1], i);
+        }
       }
     }
   };
@@ -643,8 +646,9 @@ var rxtension = (function () {
         });
         (function (container) {
           ajax.done(function (data) {
-            var divName = data.getElementsByTagName('Team')[0].getAttribute('seriesName'), country = data.getElementsByTagName('UserData')[0].getAttribute('countryShortname');
-            var divId = data.getElementsByTagName('Team')[0].getAttribute('seriesId'), idTeam = data.getElementsByTagName('Team')[0].getAttribute('teamId');
+            var index = sports.indexOf(ajaxSport) - 1;
+            var divName = data.getElementsByTagName('Team')[index].getAttribute('seriesName'), country = data.getElementsByTagName('UserData')[0].getAttribute('countryShortname');
+            var divId = data.getElementsByTagName('Team')[index].getAttribute('seriesId'), idTeam = data.getElementsByTagName('Team')[index].getAttribute('teamId');
 
             var countryHtml = '<img src="http://static.managerzone.com/nocache-560/img/flags/s_'+(country.toLowerCase())+'.gif">&nbsp;';
             var divHtml = '&nbsp;- &gt; <a href="?p=league&type=senior&sid='+divId+'&tid='+idTeam+'">'+divName+'</a>';
@@ -692,6 +696,203 @@ var rxtension = (function () {
           match.querySelector('.action-panel dd').insertAdjacentHTML('beforeend',html1+html2);
         }
       }
+    }
+  };
+
+  var onlyNumbers = function (e) {
+    if ($.inArray(e.keyCode, [46, 8, 9, 27, 13]) !== -1 ||
+       // Allow: Ctrl+A
+      (e.keyCode == 65 && e.ctrlKey === true) ||
+       // Allow: Ctrl+C
+      (e.keyCode == 67 && e.ctrlKey === true) ||
+       // Allow: Ctrl+X
+      (e.keyCode == 88 && e.ctrlKey === true) ||
+       // Allow: home, end, left, right
+      (e.keyCode >= 35 && e.keyCode <= 39)) {
+       return;
+    }
+    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+      e.preventDefault();
+    }
+  }
+
+  var formToJSONString = function (form) {
+    var obj = {};
+    var elements = form.querySelectorAll( 'input, select, textarea' );
+    for( var i = 0; i < elements.length; ++i ) {
+      var element = elements[i];
+      var name = element.name;
+      var value = element.value;
+      if( name ) {
+        obj[ name ] = value.trim();
+      }
+    }
+    return JSON.stringify( obj );
+  };
+
+  var treatAsUTC = function (date) {
+    var result = new Date(date);
+    result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
+    return result;
+  };
+
+  var reformatDate = function (strDate) {
+    var splittedDate = strDate.split('-');
+    return splittedDate[2]+'-'+splittedDate[1]+'-'+splittedDate[0];
+  };
+
+  var daysBetween = function (startDate, endDate) {
+    var millisecondsPerDay = 24 * 60 * 60 * 1000;
+    return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerDay;
+  };
+
+  var calculateTaxes = function (config) {
+    var days = daysBetween(reformatDate(config.boughtDate), reformatDate(config.soldDate));
+    var tax = {value: 0, percentage: 0}, profit = config.soldPrice - config.boughtPrice;
+
+    if (days < 0) {
+      alert('Por favor revise las fechas ingresadas');
+    }
+    else {
+      if (profit > 0) {
+        if (config.originalPlayer) {
+          tax.percentage = 15;
+        }
+        else if (config.exYouth) {
+          if (config.playerAge == 19) {
+            tax.percentage = 25;
+          }
+          if (config.playerAge == 20) {
+            tax.percentage = 20;
+          }
+          else if (config.playerAge > 20) {
+            tax.percentage = 15;
+          }
+        }
+        else {
+          if (days > 70) {
+            tax.percentage = 15;
+          }
+          else {
+            if (days > 27) {
+              tax.percentage = 50;
+            }
+            else {
+              tax.percentage = 95;
+            }
+          }
+        }
+
+        tax.value = Math.round(profit * (tax.percentage/100));
+      }
+    }
+    return tax;
+  };
+
+  var calculateTaxesAction = function (ev) {
+    ev.preventDefault();
+    var form = ev.target;
+    var jsonForm = formToJSONString(form);
+    jsonForm = JSON.parse(jsonForm);
+
+    var taxConfig = {
+      originalPlayer: jsonForm.origin*1 == 2,
+      exYouth: jsonForm.origin*1 == 1,
+      playerAge: jsonForm.playerAge*1,
+      boughtDate: jsonForm.boughtDate,
+      soldDate: jsonForm.soldDate,
+      boughtPrice: jsonForm.origin*1 == 0 ? jsonForm.boughtValue*1 : jsonForm.playerValue,
+      soldPrice: jsonForm.soldValue*1
+    };
+
+    var taxes = calculateTaxes(taxConfig);
+    var html = 'Se descuentan '+(formatMoney(taxes.value))+' en impuestos ('+(taxes.percentage)+'%)<br>Recibes '+(formatMoney(taxConfig.soldPrice - taxes.value));
+    document.querySelector('.js-tax-result').innerHTML = html;
+  };
+
+  var getTaxesForm = function () {
+    return '<article style="padding-left:5px;">'
+      +'<h3>Calcular impuestos</h3>'
+      +'<div>'
+        +'<form class="js-calculate-tax">'
+          +'<table style="width:100%;">'
+            +'<tr>'
+              +'<td><span>Origen jugador</span></td>'
+              +'<td>'
+                +'<select name="origin">'
+                  +'<option value="0">Comprado</option>'
+                  +'<option value="1">Ex juvenil</option>'
+                  +'<option value="2">Original del club</option>'
+                +'</select>'
+              +'</td>'
+            +'</tr>'
+            +'<tr>'
+              +'<td><span>Valor jugador</span> <span style="color:#A3A30D;">*</span></td>'
+              +'<td><input type="text" name="playerValue" value="0"></td>'
+            +'</tr>'
+            +'<tr>'
+              +'<td><span>Edad jugador</span> <span style="color:#A3A30D;">*</span></td>'
+              +'<td>'
+                +'<select name="playerAge">'
+                  +'<option value="19">19</option>'
+                  +'<option value="20">20</option>'
+                  +'<option value="21">M&aacute;s de 20</option>'
+                +'</select>'
+              +'</td>'
+            +'</tr>'
+            +'<tr>'
+              +'<td><span>Valor compra</span> <span style="color:#FF043D;">*</span></td>'
+              +'<td><input type="text" name="boughtValue"></td>'
+            +'</tr>'
+            +'<tr>'
+              +'<td><span>Valor venta</span></td>'
+              +'<td><input type="text" name="soldValue"></td>'
+            +'</tr>'
+            +'<tr>'
+              +'<td><span>Fecha compra</span> <span style="color:#FF043D;">*</span></td>'
+              +'<td><input type="text" name="boughtDate" placeholder="dd-mm-aaaa"></td>'
+            +'</tr>'
+            +'<tr>'
+              +'<td><span>Fecha venta</span></td>'
+              +'<td><input type="text" name="soldDate" placeholder="dd-mm-aaaa"></td>'
+            +'</tr>'
+          +'</table>'
+          +'<div>'
+            +'<span style="color:#FF043D;">*</span> <span>Si el jugador fue comprado</span><br>'
+            +'<span style="color:#A3A30D;">*</span> <span>Si el jugador es original del club o ex juvenil</span>'
+          +'</div>'
+          +'<div style="margin-top:4px;">'
+            +'<button type="submit" class="quicklink"><span class="buttonClassMiddle">Calcular</span></button>'
+          +'</div>'
+          +'<div>'
+            +'<p class="js-tax-result"></p>'
+          +'</div>'
+        +'</form>'
+      +'</div>'
+    +'</article>';
+  };
+
+  var renderTaxCalculation = function (ev) {
+    ev.preventDefault();
+    var html = getTaxesForm();
+    var container = document.querySelector('.dg_playerview_info');
+    container.insertAdjacentHTML('beforeend',html);
+  };
+
+  var renderTaxCalculationButton = function () {
+    var url = window.location.href.split('=');
+    if (url[1] == 'players&pid') {
+      var parent = document.querySelector('.dg_playerview_info');
+      var container = parent.querySelector('p');
+
+      var html = '<a href="#" class="js-render-tax mzbtn buttondiv button_red">'
+        +'<span class="buttonClassMiddle" style="white-space:nowrap;">Impuestos</span><span class="buttonClassRight">&nbsp;</span>'
+      +'</a>';
+
+      container.insertAdjacentHTML('beforeend',html);
+      $(document).on('click','.js-render-tax',renderTaxCalculation)
+        .on('submit','.js-calculate-tax',calculateTaxesAction)
+        .on('keydown change','.js-calculate-tax input',onlyNumbers);
     }
   };
 
