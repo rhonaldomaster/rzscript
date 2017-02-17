@@ -25,6 +25,7 @@ var rxtension = (function () {
     getCountryAndDiv();
     addComparators();
     renderTaxCalculationButton();
+    linkify();
 
     setTimeout(function () {
       playersMatchValue();
@@ -893,6 +894,51 @@ var rxtension = (function () {
       $(document).on('click','.js-render-tax',renderTaxCalculation)
         .on('submit','.js-calculate-tax',calculateTaxesAction)
         .on('keydown change','.js-calculate-tax input',onlyNumbers);
+    }
+  };
+
+  var linkify = function () {
+    var countryCodes = ['ar', 'at', 'biz', 'bo', 'br', 'ch', 'cl', 'co', 'com', 'cr', 'cz', 'de', 'dk', 'do', 'ec', 'edu', 'es', 'eu', 'fm', 'fr', 'gb', 'gov', 'gr', 'gt', 'hn', 'hr', 'ie', 'info', 'int', 'it', 'jobs', 'lt', 'lv', 'ly', 'mx', 'mz', 'net', 'ni', 'org', 'pa', 'pe', 'pl', 'pr', 'pt', 'py', 'ro', 'ru', 'sv', 'se', 'th', 'tk', 'tn', 'to', 'tr', 'tv', 'tz', 'uk', 'us', 'uy', 've', 'vg', 'xxx', 'yu', 'zw'];
+    var container = ['a', 'applet', 'area', 'embed', 'frame', 'frameset', 'head', 'iframe', 'img', 'map', 'meta', 'noscript', 'object', 'option', 'param', 'script', 'select', 'style', 'textarea', 'title'];
+    var inArray = function (value, items) {
+      for (var i = 0; items[i] && value != items[i]; i++)
+        ;
+      return value == items[i];
+    }
+    var regExp = /(^|[\s()\[\]_:~+@*"'>])((?:https?|ftp|irc):\/\/)?([-a-z\d;:&=+$,%_.!~*'()]+@)?((?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)|(?:(www|irc|ftp)\.)?(?:(?:[a-z\d]|[a-z\d][a-z\d-]*[a-z\d])\.)+([a-z]{2,6}))(:\d+)?(\/(?:[-\w.!~*'()%:@&=+$,;\/]*[\w~*%@&=+$\/])?(?:\?(?:[-\w;\/?:@&=+$,.!~*'()%\[\]|]*[\w\/@&=+$~*%])?)?(?:#(?:[-\w;\/?:@&=+$,.!~*'()%]*[\w\/@&=+$~*%])?)?|\b)/i
+    var counter = 0;
+    var docAct = document.body;
+    while (docAct) {
+      if (docAct.nodeName == '#text' && (match = docAct.nodeValue.match(regExp)) && countryCodes.indexOf(match[6]) > -1) {
+      // if (docAct.nodeName == '#text' && (match = docAct.nodeValue.match(regExp)) && inArray(match[6], countryCodes)) {
+        var url;
+        if (match[3] && !match[2] && !match[5] && !match[8] && (match[3].indexOf(':') == -1 || match[3].indexOf('mailto:') == 0)) {
+          url = (match[3].indexOf('mailto:') == -1 ? 'mailto:' : '') + match[3] + match[4];
+        } else {
+          url = (match[2] ? match[2] : (!match[5] || match[5] == 'www' ? 'http' : match[5]) + '://') + (match[3] ? match[3] : '') + match[4] + (match[7] ? match[7] : '') + (match[8] ? match[8] : '');
+        }
+        if (url) {
+          var range = document.createRange();
+          range.setStart(docAct, match.index + match[1].length);
+          range.setEnd(docAct, match.index + match[0].length);
+          var a = document.createElement('a');
+          a.setAttribute('href', url);
+          a.appendChild(range.extractContents());
+          range.insertNode(a);
+          range.detach();
+          counter++;
+        }
+      }
+      if (docAct.tagName && !inArray(docAct.tagName.toLowerCase(), container) && docAct.firstChild) {
+        docAct = docAct.firstChild;
+      } else if (docAct.nextSibling) {
+        docAct = docAct.nextSibling;
+      } else {
+        do {
+          docAct = docAct.parentNode;
+        } while (!docAct.nextSibling && docAct.parentNode);
+        docAct = docAct.nextSibling;
+      }
     }
   };
 
