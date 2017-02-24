@@ -26,6 +26,7 @@ var rxtension = (function () {
     addComparators();
     renderTaxCalculationButton();
     linkify();
+    renderSignatureDiv();
 
     setTimeout(function () {
       playersMatchValue();
@@ -670,9 +671,7 @@ var rxtension = (function () {
       var isPlayed = url.indexOf('played') != -1 ? 1 : 0,
         myTeamScheduled = rows[0].querySelectorAll('a')[0] ? false : true,
         startIndex = (!isPlayed && myTeamScheduled) ? 1 : 0;
-      var html1 = '', html2 = '',
-        img1 = '<img src="http://www.mzcompare.com/static/img/mzc.png" border="0" title="Comparar equipos con MZ Compare">',
-        img2 = '<img src="http://i.imgur.com/FCw8KRW.png" border="0" title="Mirar rival en MZPlus">';
+      var html1 = '', html2 = '';
       var match, links, matchId, myTeamId, rivalId;
 
       for (var i = startIndex; i < rows.length; i++) {
@@ -690,9 +689,9 @@ var rxtension = (function () {
             rivalId = links[2].href.split('=')[2];
           }
 
-          html1 = '<a class="matchIcon" href="http://www.mzcompare.com/match?played='+isPlayed+'&tid='+myTeamId+'&mid='+matchId+'" target="_blank" style="width:22px;">'+img1+'</a>';
+          html1 = '<a class="quicklink" href="http://www.mzcompare.com/match?played='+isPlayed+'&tid='+myTeamId+'&mid='+matchId+'" target="_blank" title="Comparar equipos con MZ Compare">MZC</a>';
           if (rivalId > 0) {
-            html2 = '<a class="matchIcon" href="http://mzplus.startlogic.com/i?eq='+rivalId+'" target="_blank" style="width:22px;">'+img2+'</a>';
+            html2 = '<a class="quicklink" href="http://mzplus.startlogic.com/i?eq='+rivalId+'" target="_blank" title="Mirar rival en MZPlus">MZP</a>';
           }
           match.querySelector('.action-panel dd').insertAdjacentHTML('beforeend',html1+html2);
         }
@@ -882,6 +881,7 @@ var rxtension = (function () {
 
   var renderTaxCalculationButton = function () {
     var url = window.location.href.split('=');
+    
     if (url[1] == 'players&pid') {
       var parent = document.querySelector('.dg_playerview_info');
       var container = parent.querySelector('p');
@@ -900,27 +900,23 @@ var rxtension = (function () {
   var linkify = function () {
     var countryCodes = ['ar', 'at', 'biz', 'bo', 'br', 'ch', 'cl', 'co', 'com', 'cr', 'cz', 'de', 'dk', 'do', 'ec', 'edu', 'es', 'eu', 'fm', 'fr', 'gb', 'gov', 'gr', 'gt', 'hn', 'hr', 'ie', 'info', 'int', 'it', 'jobs', 'lt', 'lv', 'ly', 'mx', 'mz', 'net', 'ni', 'org', 'pa', 'pe', 'pl', 'pr', 'pt', 'py', 'ro', 'ru', 'sv', 'se', 'th', 'tk', 'tn', 'to', 'tr', 'tv', 'tz', 'uk', 'us', 'uy', 've', 'vg', 'xxx', 'yu', 'zw'];
     var container = ['a', 'applet', 'area', 'embed', 'frame', 'frameset', 'head', 'iframe', 'img', 'map', 'meta', 'noscript', 'object', 'option', 'param', 'script', 'select', 'style', 'textarea', 'title'];
-    var inArray = function (value, items) {
-      for (var i = 0; items[i] && value != items[i]; i++)
-        ;
-      return value == items[i];
-    }
     var regExp = /(^|[\s()\[\]_:~+@*"'>])((?:https?|ftp|irc):\/\/)?([-a-z\d;:&=+$,%_.!~*'()]+@)?((?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)|(?:(www|irc|ftp)\.)?(?:(?:[a-z\d]|[a-z\d][a-z\d-]*[a-z\d])\.)+([a-z]{2,6}))(:\d+)?(\/(?:[-\w.!~*'()%:@&=+$,;\/]*[\w~*%@&=+$\/])?(?:\?(?:[-\w;\/?:@&=+$,.!~*'()%\[\]|]*[\w\/@&=+$~*%])?)?(?:#(?:[-\w;\/?:@&=+$,.!~*'()%]*[\w\/@&=+$~*%])?)?|\b)/i
     var counter = 0;
-    var docAct = document.body;
-    while (docAct) {
-      if (docAct.nodeName == '#text' && (match = docAct.nodeValue.match(regExp)) && countryCodes.indexOf(match[6]) > -1) {
-      // if (docAct.nodeName == '#text' && (match = docAct.nodeValue.match(regExp)) && inArray(match[6], countryCodes)) {
+    var currentPage = document.body;
+
+    while (currentPage) {
+      if (currentPage.nodeName == '#text' && (match = currentPage.nodeValue.match(regExp)) && countryCodes.indexOf(match[6]) > -1) {
         var url;
         if (match[3] && !match[2] && !match[5] && !match[8] && (match[3].indexOf(':') == -1 || match[3].indexOf('mailto:') == 0)) {
           url = (match[3].indexOf('mailto:') == -1 ? 'mailto:' : '') + match[3] + match[4];
-        } else {
+        }
+        else {
           url = (match[2] ? match[2] : (!match[5] || match[5] == 'www' ? 'http' : match[5]) + '://') + (match[3] ? match[3] : '') + match[4] + (match[7] ? match[7] : '') + (match[8] ? match[8] : '');
         }
         if (url) {
           var range = document.createRange();
-          range.setStart(docAct, match.index + match[1].length);
-          range.setEnd(docAct, match.index + match[0].length);
+          range.setStart(currentPage, match.index + match[1].length);
+          range.setEnd(currentPage, match.index + match[0].length);
           var a = document.createElement('a');
           a.setAttribute('href', url);
           a.appendChild(range.extractContents());
@@ -929,16 +925,144 @@ var rxtension = (function () {
           counter++;
         }
       }
-      if (docAct.tagName && !inArray(docAct.tagName.toLowerCase(), container) && docAct.firstChild) {
-        docAct = docAct.firstChild;
-      } else if (docAct.nextSibling) {
-        docAct = docAct.nextSibling;
-      } else {
-        do {
-          docAct = docAct.parentNode;
-        } while (!docAct.nextSibling && docAct.parentNode);
-        docAct = docAct.nextSibling;
+      if (currentPage.tagName && container.indexOf(currentPage.tagName.toLowerCase()) < 0 && currentPage.firstChild) {
+        currentPage = currentPage.firstChild;
       }
+      else if (currentPage.nextSibling) {
+        currentPage = currentPage.nextSibling;
+      }
+      else {
+        do {
+          currentPage = currentPage.parentNode;
+        } while (!currentPage.nextSibling && currentPage.parentNode);
+        currentPage = currentPage.nextSibling;
+      }
+    }
+  };
+
+  var obtainSignature = function () {
+    var signature;
+
+    if (localStorage.getItem('userSignature')) {
+      signature = localStorage.getItem('userSignature');
+    }
+    else if (localStorage.getItem('firmaMZ')) {
+      signature = localStorage.getItem('firmaMZ');
+    }
+    return signature;
+  };
+
+  var renderSignatureDiv = function () {
+    var url = window.location.href.split('=');
+
+    if (url.indexOf('topics&forum_id') > -1 || url.indexOf('topic&topic_id') > -1 || url.indexOf('guestbook') > -1) {
+      setTimeout(function () {
+        var signature = obtainSignature();
+        var container = document.querySelector('.bbcode');
+
+        if (signature) {
+          if (localStorage.getItem('showAlwaysUserSignature')) {
+            setSignature(signature,false);
+          }
+        }
+
+        var html = '<form class="js-signature-form">'
+          +'<table style="width:100%;">'
+            +'<tr>'
+              +'<td><span>Texto</span> <small>(Usa bbcode)</small></td>'
+            +'</tr>'
+            +'<tr>'
+              +'<td><textarea name="signature" cols="69" rows="5" style="padding:5px;">'+(signature ? signature : '')+'</textarea></td>'
+            +'</tr>'
+            +'<tr>'
+              +'<td>'
+                +'<button type="button" class="quicklink js-signature">Agregar firma</button>'
+                +'<button type="button" class="quicklink js-save-signature">Guardar firma</button>'
+                +'<button type="button" class="quicklink js-delete-signature">Borrar firma</button>'
+              +'</td>'
+            +'</tr>'
+        +'</form>';
+
+        container.insertAdjacentHTML('beforeend',html);
+      },1200);
+      $(document).on('click','.js-signature',putSignature)
+        .on('click','.js-save-signature',saveSignature)
+        .on('click','.js-delete-signature',dropSignature);
+    }
+  };
+
+  var saveUserSignature = function (signature) {
+    var savedSignature = localStorage.getItem('userSignature');
+
+    if (savedSignature != signature) {
+      localStorage.setItem('userSignature',signature);
+    }
+  };
+
+  var dropSignature = function () {
+    localStorage.removeItem('userSignature');
+    localStorage.removeItem('showAlwaysUserSignature');
+    alert('La firma fue eliminada');
+  };
+
+  var saveSignature = function () {
+    var form = document.querySelector('.js-signature-form');
+    form = formToJSONString(form);
+    form = JSON.parse(form);
+
+    var signature = form.signature;
+    signature = signature.replace(/^(\s|\&nbsp;)*|(\s|\&nbsp;)*$/g, '');
+
+    if (signature != '' && signature.length > 0 && signature != null) {
+      saveUserSignature(signature);
+    }
+    var showAlways = window.confirm('Mostrar siempre?');
+    if (showAlways) {
+      localStorage.setItem('showAlwaysUserSignature',showAlways);
+    }
+    else {
+      localStorage.removeItem('showAlwaysUserSignature');
+    }
+  };
+
+  var resetCursor = function (txtElement) {
+    if (txtElement.setSelectionRange) {
+      txtElement.focus();
+      txtElement.setSelectionRange(0, 0);
+    }
+    else if (txtElement.createTextRange) {
+      var range = txtElement.createTextRange();
+      range.moveStart('character', 0);
+      range.select();
+    }
+  }
+
+  var setSignature = function (signature,isFromForm) {
+    var textarea = document.querySelector('.markItUpEditor');
+    var put = true;
+
+    if (!isFromForm) {
+      if (textarea.value != '') {
+        put = false;
+      }
+    }
+    if (put) {
+      textarea.value += '\r\n\r\n' + '---------------------------------------------------' + '\r\n' + signature;
+      resetCursor(textarea);
+    }
+  };
+
+  var putSignature = function (ev) {
+    ev.preventDefault();
+    var form = document.querySelector('.js-signature-form');
+    form = formToJSONString(form);
+    form = JSON.parse(form);
+
+    var signature = form.signature;
+    signature = signature.replace(/^(\s|\&nbsp;)*|(\s|\&nbsp;)*$/g, '');
+
+    if (signature != '' && signature.length > 0 && signature != null) {
+      setSignature(signature,true);
     }
   };
 
