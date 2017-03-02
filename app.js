@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name           rzxtension
-// @namespace      rzxtension
-// @description    Adiciones al sitio
+// @name           rzscript
+// @namespace      rzscript
+// @description    Optimized version of original MZScript
 // @include        http://*managerzone.*
 // @grant          none
 // @version        0.1
@@ -9,29 +9,38 @@
 // @authors        rhonaldomaster
 // @credits        MZScript por c_c (c_c@managerzone.com) | serbocapo (serbocapo@managerzone.com)
 // ==/UserScript==
-var rxtension = (function () {
+var rzscript = (function () {
   var sports = ['','soccer','hockey'];
   var init = function () {
+    // general
     styling();
     forumQuickLinks();
     quickLinks();
+    linkify();
+    renderSignatureDiv();
+
+    //addons
     linkToSeniorLeague();
     fixLogoEditor();
+
+    //training
     visualTrainingBalls();
+
+    //forum
     forumPagination();
     renderCCBar();
     renderPostQuicklinks();
+
+    //matches
     previewResults();
     getCountryAndDiv();
     addComparators();
     renderTaxCalculationButton();
-    linkify();
-    renderSignatureDiv();
-
     setTimeout(function () {
       playersMatchValue();
     },500);
 
+    //events
     $(document).on('click','.training_report_header',visualTrainingBalls);
   };
 
@@ -511,7 +520,7 @@ var rxtension = (function () {
       var posts = document.querySelectorAll('.forum_body');
       var forum = url[3].replace('forum_id=', '');
       var author, authorContainer, authorId, authorName, authorTeamId, badgeContainer, html = '';
-      var titles = ['Ir al GB', 'Posts recientes', 'Invitar amistoso'],
+      var titles = ['Ir al GB', 'Posts recientes del usuario', 'Invitar amistoso'],
         texts = ['Guestbook','Posts','Amistosos'];
 
       for (var i = 0; i < posts.length; i++) {
@@ -533,11 +542,13 @@ var rxtension = (function () {
 
   var previewResults = function () {
     var url = window.location.href.split('&');
+
     if (url[1]=='sub=scheduled') {
       var container = document.querySelector('#results-fixtures-header');
       var html = '<div class="js-preview-results" style="float:right;cursor:pointer;border:2px solid #2A4CB0;width:20px;height:20px;padding:4px 0 0 4px;">'
         +'<img src="http://i915.photobucket.com/albums/ac355/ccc_vader/tmp_btn/fill-180_zps881d90f2.png" title="Ver resultados" alt="Ver resultados"/>'
       +'</div>';
+
       container.insertAdjacentHTML('afterbegin',html);
       $(document).on('click','.js-preview-results',getResults);
     }
@@ -546,9 +557,11 @@ var rxtension = (function () {
   var getResults = function (ev) {
     var matches = document.querySelectorAll('#fixtures-results-list > dd');
     var isPlaying = false, matchId, links, ajax, teamId;
+
     for (var i = 0; i < matches.length; i++) {
       links = matches[i].querySelectorAll('dl.action-panel a');
       isPlaying = links.length > 1;
+
       if (isPlaying) {
         matchId = links[0].href.split('&')[3].split('=')[1];
         ajax = $.ajax({
@@ -561,7 +574,9 @@ var rxtension = (function () {
             var score = {local: data.getElementsByTagName('Team')[0].getAttribute('goals'), visitor: data.getElementsByTagName('Team')[1].getAttribute('goals')};
             var matchScore = matchBlock.querySelector('.score-cell-wrapper > a');
             var myTeamId = matchScore.href.split('&')[2].split('=')[1];
+
             matchScore.innerHTML = score.local+' - '+score.visitor;
+
             if (score.local == score.visitor) {
               matchScore.className = 'yellow';
             }
@@ -637,6 +652,7 @@ var rxtension = (function () {
 
     if (container) {
       var rows = container.querySelectorAll('.nice_table tbody > tr');
+
       for (var i = 0; i < rows.length; i++) {
         row = rows[i];
         link = row.querySelectorAll('a')[0];
@@ -719,6 +735,7 @@ var rxtension = (function () {
   var formToJSONString = function (form) {
     var obj = {};
     var elements = form.querySelectorAll( 'input, select, textarea' );
+
     for( var i = 0; i < elements.length; ++i ) {
       var element = elements[i];
       var name = element.name;
@@ -762,7 +779,7 @@ var rxtension = (function () {
           if (config.playerAge == 19) {
             tax.percentage = 25;
           }
-          if (config.playerAge == 20) {
+          else if (config.playerAge == 20) {
             tax.percentage = 20;
           }
           else if (config.playerAge > 20) {
@@ -773,13 +790,11 @@ var rxtension = (function () {
           if (days > 70) {
             tax.percentage = 15;
           }
-          else {
-            if (days > 27) {
+          else if (days > 27) {
               tax.percentage = 50;
-            }
-            else {
-              tax.percentage = 95;
-            }
+          }
+          else {
+            tax.percentage = 95;
           }
         }
 
@@ -881,7 +896,7 @@ var rxtension = (function () {
 
   var renderTaxCalculationButton = function () {
     var url = window.location.href.split('=');
-    
+
     if (url[1] == 'players&pid') {
       var parent = document.querySelector('.dg_playerview_info');
       var container = parent.querySelector('p');
@@ -1071,4 +1086,4 @@ var rxtension = (function () {
   };
 })();
 
-rxtension.init();
+rzscript.init();
