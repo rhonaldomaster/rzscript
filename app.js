@@ -21,7 +21,6 @@ var rzscript = (function () {
 
     //addons
     linkToSeniorLeague();
-    fixLogoEditor();
 
     //training
     visualTrainingBalls();
@@ -77,19 +76,6 @@ var rzscript = (function () {
     }
   };
 
-  var fixLogoEditor = function () {
-    var url = window.location.href.split('=');
-
-    if (url[1].indexOf('team') > -1 && url[2].indexOf('alter') > -1) {
-      $(document).on('click','#ui-id-2',function (ev) {
-        setTimeout(function () {
-          var container = document.querySelector('#logo_editor embed');
-          container.width = '100%';
-        },2000);
-      });
-    }
-  };
-
   var createButtonLinks = function (selectorType,selector,wrapper,links,prepend) {
     var container = document.querySelector(selectorType+selector);
     var target = '', html = '<div '+(selectorType=='.' ? 'class':'id')+'="'+selector+'">';
@@ -131,7 +117,7 @@ var rzscript = (function () {
       {text: 'Lesiones/Sanciones', title:'Ver Lesionados/Sancionados',url:'?p=players&sub=unavailable'},
       {text: 'Reporte entr.', title:'Ver el Reporte de Entrenamiento',url:'?p=training_report'},
       {text: 'Entrenamiento', title:'Ir al Entrenamiento General',url:'?p=training'},
-      {text: 'MZ Plus', title:'Skiller MZ Plus',url:'http://mzplus.startlogic.com/p'},
+      {text: 'MZ Plus', title:'Skiller MZ Plus',url:'http://mzplus.info/p'},
       {text: 'Imgur', title:'Ir a Imgur',url:'http://imgur.com/'}
     ];
     createButtonLinks('.','quicklinks',document.querySelector('#contentDiv'),links,true);
@@ -459,10 +445,10 @@ var rzscript = (function () {
       }
       else {
         if (isNaN(data)) {
-          html = '[image url=http://mzplus.startlogic.com/imgdin_liga?user=' + data + ']';
+          html = '[image url=http://mzplus.info/imgdin_liga?user=' + data + ']';
         }
         else {
-          html = '[image url=http://mzplus.startlogic.com/imgdin_liga?user=&idla=' + data + ']'
+          html = '[image url=http://mzplus.info/imgdin_liga?user=&idla=' + data + ']'
         }
         postItem(html);
       }
@@ -707,7 +693,7 @@ var rzscript = (function () {
 
           html1 = '<a class="quicklink" href="http://www.mzcompare.com/match?played='+isPlayed+'&tid='+myTeamId+'&mid='+matchId+'" target="_blank" title="Comparar equipos con MZ Compare">MZC</a>';
           if (rivalId > 0) {
-            html2 = '<a class="quicklink" href="http://mzplus.startlogic.com/i?eq='+rivalId+'" target="_blank" title="Mirar rival en MZPlus">MZP</a>';
+            html2 = '<a class="quicklink" href="http://mzplus.info/i?eq='+rivalId+'" target="_blank" title="Mirar rival en MZPlus">MZP</a>';
           }
           match.querySelector('.action-panel dd').insertAdjacentHTML('beforeend',html1+html2);
         }
@@ -843,7 +829,7 @@ var rzscript = (function () {
             +'</tr>'
             +'<tr>'
               +'<td><span>Valor jugador</span> <span style="color:#A3A30D;">*</span></td>'
-              +'<td><input type="text" name="playerValue" value="0"></td>'
+              +'<td><input type="text" name="playerValue" value="0" class="js-only-numbers"></td>'
             +'</tr>'
             +'<tr>'
               +'<td><span>Edad jugador</span> <span style="color:#A3A30D;">*</span></td>'
@@ -857,11 +843,11 @@ var rzscript = (function () {
             +'</tr>'
             +'<tr>'
               +'<td><span>Valor compra</span> <span style="color:#FF043D;">*</span></td>'
-              +'<td><input type="text" name="boughtValue"></td>'
+              +'<td><input type="text" name="boughtValue" class="js-only-numbers"></td>'
             +'</tr>'
             +'<tr>'
               +'<td><span>Valor venta</span></td>'
-              +'<td><input type="text" name="soldValue"></td>'
+              +'<td><input type="text" name="soldValue" class="js-only-numbers"></td>'
             +'</tr>'
             +'<tr>'
               +'<td><span>Fecha compra</span> <span style="color:#FF043D;">*</span></td>'
@@ -908,7 +894,7 @@ var rzscript = (function () {
       container.insertAdjacentHTML('beforeend',html);
       $(document).on('click','.js-render-tax',renderTaxCalculation)
         .on('submit','.js-calculate-tax',calculateTaxesAction)
-        .on('keydown change','.js-calculate-tax input',onlyNumbers);
+        .on('keydown change','.js-only-numbers',onlyNumbers);
     }
   };
 
@@ -968,7 +954,7 @@ var rzscript = (function () {
   };
 
   var renderSignatureDiv = function () {
-    var url = window.location.href.split('=');
+    var url = window.location.href;
 
     if (url.indexOf('topics&forum_id') > -1 || url.indexOf('topic&topic_id') > -1 || url.indexOf('guestbook') > -1) {
       setTimeout(function () {
