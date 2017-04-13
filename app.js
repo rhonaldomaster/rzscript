@@ -654,7 +654,7 @@ var rzscript = (function () {
             var divName = data.getElementsByTagName('Team')[index].getAttribute('seriesName'), country = data.getElementsByTagName('UserData')[0].getAttribute('countryShortname');
             var divId = data.getElementsByTagName('Team')[index].getAttribute('seriesId'), idTeam = data.getElementsByTagName('Team')[index].getAttribute('teamId');
 
-            var countryHtml = '<img src="http://static.managerzone.com/nocache-560/img/flags/s_'+(country.toLowerCase())+'.gif">&nbsp;';
+            var countryHtml = '<img src="http://static.managerzone.com/nocache-581/img/flags/12/'+(country.toLowerCase())+'.png">&nbsp;';
             var divHtml = '&nbsp;- &gt; <a href="?p=league&type=senior&sid='+divId+'&tid='+idTeam+'">'+divName+'</a>';
 
             container.insertAdjacentHTML('beforeend',divHtml);
