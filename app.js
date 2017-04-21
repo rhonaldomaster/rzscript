@@ -44,7 +44,7 @@ var rzscript = (function () {
   };
 
   var styling = function () {
-    var css = '#notifications-wrapper{bottom:-2px;}.quicklink{background-color:#4A4A4A;border:0;border-radius:4px;box-shadow:0 0 1px 0 #000;color:#FFF;cursor:pointer;display:inline-block;margin-left:4px;padding:2px 4px;text-decoration:none;transition:0.2s ease-in-out all;}.quicklink:hover{background-color:#000000;box-shadow:0 0 2px 0 #000000;color:#FFFFFF;transform:scale(1.1);text-decoration:none;}.quicklinks{padding:0 4px 8px;text-align:center;}#fluid-menu-opener > div.sport-line,#top-wrapper-sport-line{background:#5d5b5f none repeat scroll 0 0;}';
+    var css = '#pt-wrapper{bottom:52px;filter:alpha(opacity=50);opacity:0.5;}#notifications-wrapper{bottom:-2px;}.quicklink{background-color:#4A4A4A;border:0;border-radius:4px;box-shadow:0 0 1px 0 #000;color:#FFF;cursor:pointer;display:inline-block;margin-left:4px;padding:2px 4px;text-decoration:none;transition:0.2s ease-in-out all;}.quicklink:hover{background-color:#000000;box-shadow:0 0 2px 0 #000000;color:#FFFFFF;transform:scale(1.1);text-decoration:none;}.quicklinks{padding:0 4px 8px;text-align:center;}#fluid-menu-opener > div.sport-line,#top-wrapper-sport-line{background:#5d5b5f none repeat scroll 0 0;}';
     if (typeof GM_addStyle != 'undefined') {
       GM_addStyle(css);
     }
