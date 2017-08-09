@@ -6,7 +6,7 @@
 // @grant          none
 // @version        0.1
 // @copyright      GNU/GPL v3
-// @authors        rhonaldomaster
+// @authors        rhonaldomaster (https://github.com/rhonaldomaster)
 // @credits        MZScript por c_c (c_c@managerzone.com) | serbocapo (serbocapo@managerzone.com)
 // ==/UserScript==
 var rzscript = (function () {
@@ -44,7 +44,7 @@ var rzscript = (function () {
   };
 
   var styling = function () {
-    var css = '#pt-wrapper{bottom:52px;filter:alpha(opacity=50);opacity:0.5;}#notifications-wrapper{bottom:-2px;}.quicklink{background-color:#4A4A4A;border:0;border-radius:4px;box-shadow:0 0 1px 0 #000;color:#FFF;cursor:pointer;display:inline-block;margin-left:4px;padding:2px 4px;text-decoration:none;transition:0.2s ease-in-out all;}.quicklink:hover{background-color:#000000;box-shadow:0 0 2px 0 #000000;color:#FFFFFF;transform:scale(1.1);text-decoration:none;}.quicklinks{padding:0 4px 8px;text-align:center;}#fluid-menu-opener > div.sport-line,#top-wrapper-sport-line{background:#5d5b5f none repeat scroll 0 0;}';
+    var css = '#pt-wrapper{bottom:52px;filter:alpha(opacity=50);opacity:0.5;}#notifications-wrapper{bottom:-2px;}.quicklink{background-color:#4A4A4A;border:0;border-radius:4px;box-shadow:0 0 1px 0 #000;color:#FFF;cursor:pointer;display:inline-block;margin-left:4px;padding:2px 4px;text-decoration:none;transition:0.2s ease-in-out all;}.quicklink:hover{background-color:#000000;box-shadow:0 0 2px 0 #000000;color:#FFFFFF;transform:scale(1.1);text-decoration:none;}.quicklinks{padding:0 4px 8px;text-align:center;}#fluid-menu-opener > div.sport-line,#top-wrapper-sport-line{background:#5d5b5f none repeat scroll 0 0;}.bbcode{margin:auto;max-width:640px;}';
     if (typeof GM_addStyle != 'undefined') {
       GM_addStyle(css);
     }
@@ -418,7 +418,7 @@ var rzscript = (function () {
   };
 
   var postItem = function (html) {
-    var textarea = document.querySelector('#forum_form_message');
+    var textarea = document.querySelector('.markItUpEditor');
     var scrollTop = textarea.scrollTop;
     var selectionStart = textarea.selectionStart;
     var selectionEnd = textarea.selectionEnd;
@@ -485,8 +485,8 @@ var rzscript = (function () {
   };
 
   var renderCCBar = function () {
-    var url = window.location.href.split('&');
-    if (url[1] == 'sub=topics' || url[1] == 'sub=topic') {
+    var url = window.location.href;
+    if (url.indexOf('topics&forum_id') > -1 || url.indexOf('topic&topic_id') > -1 || url.indexOf('guestbook') > -1) {
       setTimeout(function () {
         var container = document.querySelector('.bbcode');
         if (container) {
@@ -688,7 +688,7 @@ var rzscript = (function () {
             rivalId = links[2].href.split('=')[2];
           }
 
-          html1 = '<a class="quicklink" href="http://www.mzcompare.com/match?played='+isPlayed+'&tid='+myTeamId+'&mid='+matchId+'" target="_blank" title="Comparar equipos con MZ Compare">MZC</a>';
+          // html1 = '<a class="quicklink" href="http://www.mzcompare.com/match?played='+isPlayed+'&tid='+myTeamId+'&mid='+matchId+'" target="_blank" title="Comparar equipos con MZ Compare">MZC</a>';
           if (rivalId > 0) {
             html2 = '<a class="quicklink" href="http://mzplus.info/i?eq='+rivalId+'" target="_blank" title="Mirar rival en MZPlus">MZP</a>';
           }
@@ -970,7 +970,7 @@ var rzscript = (function () {
               +'<td><span>Texto</span> <small>(Usa bbcode)</small></td>'
             +'</tr>'
             +'<tr>'
-              +'<td><textarea name="signature" cols="69" rows="5" style="padding:5px;">'+(signature ? signature : '')+'</textarea></td>'
+              +'<td><textarea name="signature" cols="84" rows="5" style="padding:5px;">'+(signature ? signature : '')+'</textarea></td>'
             +'</tr>'
             +'<tr>'
               +'<td>'
