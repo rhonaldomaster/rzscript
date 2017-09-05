@@ -2,7 +2,7 @@
 // @name           rzscript
 // @namespace      rzscript
 // @description    Optimized version of original MZScript
-// @include        http://*managerzone.*
+// @include        http*://*managerzone.*
 // @grant          none
 // @version        0.1
 // @copyright      GNU/GPL v3
