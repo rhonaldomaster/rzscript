@@ -525,12 +525,12 @@ var rzscript = (function () {
   };
 
   var previewResults = function () {
-    var url = window.location.href.split('&');
+    var url = window.location.href;
 
-    if (url[1]=='sub=scheduled') {
+    if (url.indexOf('sub=scheduled')) {
       var container = document.querySelector('#results-fixtures-header');
       var html = '<div class="js-preview-results" style="float:right;cursor:pointer;border:2px solid #2A4CB0;width:20px;height:20px;padding:4px 0 0 4px;">'
-        +'<img src="http://i.imgur.com/WL38HPq.png" title="Ver resultados" alt="Ver resultados"/>'
+        +'<img src="https://i.imgur.com/WL38HPq.png" title="Ver resultados" alt="Ver resultados"/>'
       +'</div>';
 
       container.insertAdjacentHTML('afterbegin',html);
@@ -539,15 +539,15 @@ var rzscript = (function () {
   };
 
   var getResults = function (ev) {
-    var matches = document.querySelectorAll('#fixtures-results-list > dd');
+    var matches = document.querySelectorAll('#fixtures-results-list > .odd');
     var isPlaying = false, matchId, links, ajax, teamId;
 
     for (var i = 0; i < matches.length; i++) {
-      links = matches[i].querySelectorAll('dl.action-panel a');
-      isPlaying = links.length > 1;
+      scoreBlock = matches[i].querySelector('.score-cell-wrapper > a');
+      isPlaying = matches[i].querySelector('.set-default-wrapper').innerHTML == '';
 
       if (isPlaying) {
-        matchId = links[0].href.split('&')[3].split('=')[1];
+        matchId = scoreBlock.href.split('&')[3].split('=')[1];
         ajax = $.ajax({
           url: '/xml/match_info.php',
           type: 'GET',
@@ -555,33 +555,26 @@ var rzscript = (function () {
         });
         (function (matchBlock) {
           ajax.done(function (data) {
-            var score = {local: data.getElementsByTagName('Team')[0].getAttribute('goals'), visitor: data.getElementsByTagName('Team')[1].getAttribute('goals')};
-            var matchScore = matchBlock.querySelector('.score-cell-wrapper > a');
-            var myTeamId = matchScore.href.split('&')[2].split('=')[1];
+            if ( ! data.getElementsByTagName('ManagerZone_Error')[0] ) {
+              var myTeamId = matchBlock.href.split('&')[2].split('=')[1];
+              var score = {
+                local: data.getElementsByTagName('Team')[0].getAttribute('goals'),
+                visitor: data.getElementsByTagName('Team')[1].getAttribute('goals')
+              };
 
-            matchScore.innerHTML = score.local+' - '+score.visitor;
-
-            if (score.local == score.visitor) {
-              matchScore.className = 'yellow';
-            }
-            else if (myTeamId == data.getElementsByTagName('Team')[0].getAttribute('id')) {
-              if (score.local > score.visitor) {
-                matchScore.className = 'green';
+              matchBlock.innerHTML = score.local+' - '+score.visitor;
+              if (score.local == score.visitor) {
+                matchBlock.className = 'yellow';
               }
-              else {
-                matchScore.className = 'red';
+              else if (myTeamId == data.getElementsByTagName('Team')[0].getAttribute('id')) {
+                matchBlock.className = score.local > score.visitor ? 'green' : 'red';
               }
-            }
-            else if (myTeamId == data.getElementsByTagName('Team')[1].getAttribute('id')) {
-              if (score.local < score.visitor) {
-                matchScore.className = 'green';
-              }
-              else {
-                matchScore.className = 'red';
+              else if (myTeamId == data.getElementsByTagName('Team')[1].getAttribute('id')) {
+                matchBlock.className = score.local < score.visitor ? 'green' : 'red';
               }
             }
           });
-        })(matches[i]);
+        })(scoreBlock);
       }
     }
   };
