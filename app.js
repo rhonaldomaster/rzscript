@@ -720,11 +720,8 @@ var rzscript = (function () {
     var elements = form.querySelectorAll( 'input, select, textarea' );
 
     for( var i = 0; i < elements.length; ++i ) {
-      var element = elements[i];
-      var name = element.name;
-      var value = element.value;
-      if( name ) {
-        obj[ name ] = value.trim();
+      if (elements[i].name) {
+        obj[elements[i].name] = elements[i].value.trim();
       }
     }
     return JSON.stringify( obj );
@@ -759,26 +756,10 @@ var rzscript = (function () {
           tax.percentage = 15;
         }
         else if (config.exYouth) {
-          if (config.playerAge == 19) {
-            tax.percentage = 25;
-          }
-          else if (config.playerAge == 20) {
-            tax.percentage = 20;
-          }
-          else if (config.playerAge > 20) {
-            tax.percentage = 15;
-          }
+          tax.percentage = config.playerAge < 20 ? 25 : ( config.playerAge < 21 ? 20 : 15 );
         }
         else {
-          if (days > 70) {
-            tax.percentage = 15;
-          }
-          else if (days > 27) {
-              tax.percentage = 50;
-          }
-          else {
-            tax.percentage = 95;
-          }
+          tax.percentage = days > 69 ? 15 : ( days > 26 ? 50 : 95 );
         }
 
         tax.value = Math.round(profit * (tax.percentage/100));
@@ -991,7 +972,6 @@ var rzscript = (function () {
 
   var saveUserSignature = function (signature) {
     var savedSignature = localStorage.getItem('userSignature');
-
     if (savedSignature != signature) {
       localStorage.setItem('userSignature',signature);
     }
@@ -1005,11 +985,8 @@ var rzscript = (function () {
 
   var saveSignature = function () {
     var form = document.querySelector('.js-signature-form');
-    form = formToJSONString(form);
-    form = JSON.parse(form);
-
-    var signature = form.signature;
-    signature = signature.replace(/^(\s|\&nbsp;)*|(\s|\&nbsp;)*$/g, '');
+    form = JSON.parse( formToJSONString(form) );
+    var signature = form.signature.replace(/^(\s|\&nbsp;)*|(\s|\&nbsp;)*$/g, '');
 
     if (signature != '' && signature.length > 0 && signature != null) {
       saveUserSignature(signature);
@@ -1037,15 +1014,14 @@ var rzscript = (function () {
 
   var setSignature = function (signature,isFromForm) {
     var textarea = document.querySelector('.markItUpEditor');
-    var put = true;
+    var put = !isFromForm && textarea.value != '' ? false : true;
 
-    if (!isFromForm) {
-      if (textarea.value != '') {
-        put = false;
-      }
-    }
     if (put) {
-      textarea.value += '\r\n\r\n' + '---------------------------------------------------' + '\r\n' + signature;
+      textarea.value += '\r\n\r\n';
+      for (var i = 0; i <= 50; i++) {
+        textarea.value += '-';
+      }
+      textarea.value += '\r\n' + signature;
       resetCursor(textarea);
     }
   };
@@ -1053,11 +1029,9 @@ var rzscript = (function () {
   var putSignature = function (ev) {
     ev.preventDefault();
     var form = document.querySelector('.js-signature-form');
-    form = formToJSONString(form);
-    form = JSON.parse(form);
+    form = JSON.parse( formToJSONString(form) );
 
-    var signature = form.signature;
-    signature = signature.replace(/^(\s|\&nbsp;)*|(\s|\&nbsp;)*$/g, '');
+    var signature = form.signature.replace(/^(\s|\&nbsp;)*|(\s|\&nbsp;)*$/g, '');
 
     if (signature != '' && signature.length > 0 && signature != null) {
       setSignature(signature,true);
