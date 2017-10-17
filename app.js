@@ -32,12 +32,12 @@ var rzscript = (function () {
 
     //matches
     previewResults();
-    getCountryAndDiv();
-    addComparators();
-    renderTaxCalculationButton();
     setTimeout(function () {
       playersMatchValue();
     },500);
+    getCountryAndDiv();
+    addComparators();
+    renderTaxCalculationButton();
 
     //events
     $(document).on('click','.training_report_header',visualTrainingBalls);
@@ -195,14 +195,16 @@ var rzscript = (function () {
   };
 
   var playersMatchValue = function () {
-    if (ajaxSport == 'soccer') {
-      var teamsDiv = document.querySelectorAll('.team-table');
-      var links;
-
-      if (teamsDiv) {
-        for (var i = 0; i < teamsDiv.length; i++) {
-          links = teamsDiv[i].querySelectorAll('a');
-          renderTeamValue(links[0].href.split('&')[1].split('=')[1], i);
+    var url = window.location.href;
+    if (url.indexOf('p=match&sub=result') > -1) {
+      if (ajaxSport == 'soccer') {
+        var teamsDiv = document.querySelectorAll('.team-table');
+        var links;
+        if (teamsDiv) {
+          for (var i = 0; i < teamsDiv.length; i++) {
+            links = teamsDiv[i].querySelectorAll('a');
+            renderTeamValue(links[0].href.split('&')[1].split('=')[1], i);
+          }
         }
       }
     }
@@ -499,8 +501,8 @@ var rzscript = (function () {
   };
 
   var renderPostQuicklinks = function () {
-    var url = window.location.href.split('&');
-    if (url[1] == 'sub=topic') {
+    var url = window.location.href;
+    if (url.indexOf('sub=topic') > -1) {
       var posts = document.querySelectorAll('.forum_body');
       var forum = url[3].replace('forum_id=', '');
       var author, authorContainer, authorId, authorName, authorTeamId, badgeContainer, html = '';
@@ -526,8 +528,7 @@ var rzscript = (function () {
 
   var previewResults = function () {
     var url = window.location.href;
-
-    if (url.indexOf('sub=scheduled')) {
+    if (url.indexOf('sub=scheduled') > -1) {
       var container = document.querySelector('#results-fixtures-header');
       var html = '<div class="js-preview-results" style="float:right;cursor:pointer;border:2px solid #2A4CB0;width:20px;height:20px;padding:4px 0 0 4px;">'
         +'<img src="https://i.imgur.com/WL38HPq.png" title="Ver resultados" alt="Ver resultados"/>'
@@ -540,14 +541,15 @@ var rzscript = (function () {
 
   var getResults = function (ev) {
     var matches = document.querySelectorAll('#fixtures-results-list > .odd');
-    var isPlaying = false, matchId, links, ajax, teamId;
+    var isPlaying = false, matchId, links, ajax, teamId, scoreBlock, tacticWrapper;
 
     for (var i = 0; i < matches.length; i++) {
       scoreBlock = matches[i].querySelector('.score-cell-wrapper > a');
-      isPlaying = matches[i].querySelector('.set-default-wrapper').innerHTML == '';
+      tacticWrapper = $.trim(matches[i].querySelector(".set-default-wrapper").innerHTML);
+      isPlaying = tacticWrapper === "";
 
       if (isPlaying) {
-        matchId = scoreBlock.href.split('&')[3].split('=')[1];
+        matchId = scoreBlock.href.split('&')[2].split('=')[1];
         ajax = $.ajax({
           url: '/xml/match_info.php',
           type: 'GET',
@@ -556,10 +558,10 @@ var rzscript = (function () {
         (function (matchBlock) {
           ajax.done(function (data) {
             if ( ! data.getElementsByTagName('ManagerZone_Error')[0] ) {
-              var myTeamId = matchBlock.href.split('&')[2].split('=')[1];
+              var myTeamId = matchBlock.href.split('&')[3].split('=')[1];
               var score = {
-                local: data.getElementsByTagName('Team')[0].getAttribute('goals'),
-                visitor: data.getElementsByTagName('Team')[1].getAttribute('goals')
+                local: data.getElementsByTagName('Team')[0].getAttribute('goals') * 1,
+                visitor: data.getElementsByTagName('Team')[1].getAttribute('goals') * 1
               };
 
               matchBlock.innerHTML = score.local+' - '+score.visitor;
