@@ -9,7 +9,7 @@
 // @authors        rhonaldomaster (https://github.com/rhonaldomaster)
 // @credits        c_c, serbocapo
 // ==/UserScript==
-const rzscript = (function() {
+const rzscript = (() => {
   const sports = ['', 'soccer', 'hockey'];
 
   const init = () => {
@@ -23,8 +23,9 @@ const rzscript = (function() {
   const setStyles = () => {
     const css = '#pt-wrapper{bottom:52px;filter:alpha(opacity=50);opacity:0.5;}#notifications-wrapper{bottom:-2px;}'
       +'.quicklink{background-color:#4A4A4A;border:0;border-radius:4px;box-shadow:0 0 1px 0 #000;color:#FFF;cursor:pointer;display:inline-block;margin-left:4px;padding:2px 4px;text-decoration:none;}'
-      +'.quicklink:hover{background-color:#000000;box-shadow:0 0 2px 0 #000000;color:#FFFFFF;;text-decoration:none;}'
-      +'.quicklinks{padding:0 4px 8px;text-align:center;}'
+      +'.quicklink:hover{background-color:#000000;box-shadow:0 0 2px 0 #000000;color:#FFFFFF;text-decoration:none;}'
+      +'.pagelinks{padding:0 4px 8px;}'
+      +'.quicklinks{text-align:center;}'
       +'#fluid-menu-opener > div.sport-line,#top-wrapper-sport-line{background:#5d5b5f none repeat scroll 0 0;}'
       +'.preview-results{border:2px solid #2A4CB0;cursor:pointer;float:right;height:20px;padding:4px 0 0 4px;width:20px;}'
       +'.bbcode{margin:auto;max-width:640px;}';
@@ -53,7 +54,7 @@ const rzscript = (function() {
     if (container) {
       return;
     }
-    let html = '<div ' + (data.selector.charAt(0) == '.' ? 'class' : 'id') + '="' + data.selector.replace(/\./g) + ' quicklinks">';
+    let html = '<div ' + (data.selector.charAt(0) == '.' ? 'class' : 'id') + '="' + data.selector.replace(/\./g,'') + '">';
     html += data.links.reduce((prev, curr) => {
       let target = curr.url.indexOf('?p=') < 0 ? ' target="_blank"' : '';
       return prev + '<a class="quicklink" href="' + (curr.url) + '"' + (target) + ' title="' + (curr.title) + '">' + (curr.text) + '</a>';
@@ -98,7 +99,7 @@ const rzscript = (function() {
       { text: 'Imgur', title: 'Ir a Imgur', url: 'https://imgur.com/' }
     ];
     const options = {
-      selector: '.pagelinks',
+      selector: '.pagelinks .quicklinks',
       wrapper: document.querySelector('#contentDiv'),
       links: links,
       prepend: true
