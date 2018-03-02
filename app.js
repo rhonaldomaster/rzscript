@@ -2,11 +2,12 @@
 // @name           rzscript
 // @namespace      rzscript
 // @description    Updated version of original MZScript
+// @homepage       https://github.com/rhonaldomaster/rzscript
 // @include        http*://*managerzone.*
 // @grant          none
 // @version        0.1
 // @copyright      GNU/GPL v3
-// @authors        rhonaldomaster (https://github.com/rhonaldomaster)
+// @author         rhonaldomaster | https://github.com/rhonaldomaster
 // @credits        c_c, serbocapo
 // ==/UserScript==
 const rzscript = (() => {
@@ -21,14 +22,14 @@ const rzscript = (() => {
   };
 
   const setStyles = () => {
-    const css = '#pt-wrapper{bottom:52px;filter:alpha(opacity=50);opacity:0.5;}#notifications-wrapper{bottom:-2px;}'
-      +'.quicklink{background-color:#4A4A4A;border:0;border-radius:4px;box-shadow:0 0 1px 0 #000;color:#FFF;cursor:pointer;display:inline-block;margin-left:4px;padding:2px 4px;text-decoration:none;}'
-      +'.quicklink:hover{background-color:#000000;box-shadow:0 0 2px 0 #000000;color:#FFFFFF;text-decoration:none;}'
-      +'.pagelinks{padding:0 4px 8px;}'
-      +'.quicklinks{text-align:center;}'
-      +'#fluid-menu-opener > div.sport-line,#top-wrapper-sport-line{background:#5d5b5f none repeat scroll 0 0;}'
-      +'.preview-results{border:2px solid #2A4CB0;cursor:pointer;float:right;height:20px;padding:4px 0 0 4px;width:20px;}'
-      +'.bbcode{margin:auto;max-width:640px;}';
+    const css = '#pt-wrapper{bottom:52px;filter:alpha(opacity=50);opacity:0.5;}#notifications-wrapper{bottom:-2px;}' +
+      '.quicklink{background-color:#4A4A4A;border:0;border-radius:4px;box-shadow:0 0 1px 0 #000;color:#FFF;cursor:pointer;display:inline-block;margin-left:4px;padding:2px 4px;text-decoration:none;}' +
+      '.quicklink:hover{background-color:#000000;box-shadow:0 0 2px 0 #000000;color:#FFFFFF;text-decoration:none;}' +
+      '.pagelinks{padding:0 4px 8px;}' +
+      '.quicklinks{text-align:center;}' +
+      '#fluid-menu-opener > div.sport-line,#top-wrapper-sport-line{background:#5d5b5f none repeat scroll 0 0;}' +
+      '.preview-results{border:2px solid #2A4CB0;cursor:pointer;float:right;height:20px;padding:4px 0 0 4px;width:20px;}' +
+      '.bbcode{margin:auto;max-width:640px;}';
     if (typeof GM_addStyle != 'undefined') {
       GM_addStyle(css);
       return;
@@ -117,29 +118,29 @@ const rzscript = (() => {
     }
     let container = document.querySelector('.bbcode');
     const html =
-    '<form class="js-signature-form">'
-      + '<table style="width:100%;">'
-        + '<tr>'
-          + '<td><span>Texto</span> <small>(Usa bbcode)</small></td>'
-        + '</tr>'
-        + '<tr>'
-          + '<td><textarea name="signature" cols="84" rows="5" style="padding:5px;">' + (signature ? signature : '') + '</textarea></td>'
-        + '</tr>'
-        + '<tr>'
-          + '<td>'
-            + '<button type="button" class="quicklink js-signature">Agregar firma</button>'
-            + '<button type="button" class="quicklink js-save-signature">Guardar firma</button>'
-            + '<button type="button" class="quicklink js-delete-signature">Borrar firma</button>'
-          + '</td>'
-        + '</tr>'
-      + '</table>'
-    + '</form>';
+    '<form class="js-signature-form">' +
+      '<table style="width:100%;">' +
+        '<tr>' +
+          '<td><span>Texto</span> <small>(Usa bbcode)</small></td>' +
+        '</tr>' +
+        '<tr>' +
+          '<td><textarea name="signature" cols="84" rows="5" style="padding:5px;">' + (signature ? signature : '') + '</textarea></td>' +
+        '</tr>' +
+        '<tr>' +
+          '<td>' +
+            '<button type="button" class="quicklink js-signature">Agregar firma</button>' +
+            '<button type="button" class="quicklink js-save-signature">Guardar firma</button>' +
+            '<button type="button" class="quicklink js-delete-signature">Borrar firma</button>' +
+          '</td>' +
+        '</tr>' +
+      '</table>' +
+    '</form>';
     container.insertAdjacentHTML('beforeend', html);
   };
 
   const setSignature = (signature, isFromForm) => {
     let textarea = document.querySelector('.markItUpEditor');
-    const put = !isFromForm && textarea.value != '' ? false : true;
+    const put = !isFromForm && textarea.value !== '' ? false : true;
     if (!put) {
       return;
     }
@@ -155,7 +156,7 @@ const rzscript = (() => {
     let form = document.querySelector('.js-signature-form');
     form = JSON.parse(formToJSONString(form));
     let signature = form.signature.replace(/^(\s|\&nbsp;)*|(\s|\&nbsp;)*$/g, '');
-    if (signature != '' && signature.length > 0 && signature != null) {
+    if (signature !== '' && signature.length > 0 && signature !== null) {
       saveUserSignature(signature);
     }
     let showAlways = window.confirm('Mostrar siempre?');
@@ -164,7 +165,7 @@ const rzscript = (() => {
       return;
     }
     localStorage.removeItem('showAlwaysUserSignature');
-  }
+  };
 
   const resetCursor = (element) => {
     if (element.setSelectionRange) {
@@ -193,7 +194,7 @@ const rzscript = (() => {
     let form = document.querySelector('.js-signature-form');
     form = JSON.parse(formToJSONString(form));
     let signature = form.signature.replace(/^(\s|\&nbsp;)*|(\s|\&nbsp;)*$/g, '');
-    if (signature != '' && signature.length > 0 && signature != null) {
+    if (signature !== '' && signature.length > 0 && signature !== null) {
       setSignature(signature, true);
     }
   };
@@ -292,9 +293,9 @@ const rzscript = (() => {
   const previewResultsButton = () => {
     let container = document.querySelector('#results-fixtures-header');
     const html =
-      '<div class="preview-results js-preview-results">'
-        + '<img src="https://i.imgur.com/WL38HPq.png" title="Ver resultados" alt="Ver resultados"/>'
-      + '</div>';
+      '<div class="preview-results js-preview-results">' +
+        '<img src="https://i.imgur.com/WL38HPq.png" title="Ver resultados" alt="Ver resultados"/>' +
+      '</div>';
     container.insertAdjacentHTML('afterbegin', html);
   };
 
@@ -347,9 +348,13 @@ const rzscript = (() => {
     }
     let containerSelector, clickedElementSelector, targetContainerSelector;
     if (cups.indexOf(url[1]) > -1) {
-      containerSelector = '#cup-div', clickedElementSelector = '#ui-id-4', targetContainerSelector = '#group-stages';
+      containerSelector = '#cup-div';
+      clickedElementSelector = '#ui-id-4';
+      targetContainerSelector = '#group-stages';
     } else if (friendlyLeagues.indexOf(url[1]) > -1) {
-      containerSelector = '#friendly-series-div', clickedElementSelector = '#ui-id-2', targetContainerSelector = '#ui-tabs-2';
+      containerSelector = '#friendly-series-div';
+      clickedElementSelector = '#ui-id-2';
+      targetContainerSelector = '#ui-tabs-2';
       if (url.indexOf('standings&fsid') > -1) {
         setTimeout(() => {
           renderDivAndCountryButton();
@@ -369,7 +374,7 @@ const rzscript = (() => {
   const renderDivAndCountryButton = () => {
     let tableHeader = document.querySelectorAll('.nice_table thead tr.seriesHeader')[0];
     let firstCell = tableHeader.cells[0];
-    firstCell.innerHTML = '<img class="js-view-div-country" src="http://i.imgur.com/IwaQRmF.png" title="Ver divisi&oacute;n y pa&iacute;s" style="cursor:pointer;">';
+    firstCell.innerHTML = '<img class="js-view-div-country" src="https://i.imgur.com/IwaQRmF.png" title="Ver divisi&oacute;n y pa&iacute;s" style="cursor:pointer;">';
   };
 
   const renderDivAndCountry = (containerSelector) => {
@@ -551,7 +556,7 @@ const rzscript = (() => {
       playerAge: jsonForm.playerAge * 1,
       boughtDate: jsonForm.boughtDate,
       soldDate: jsonForm.soldDate,
-      boughtPrice: jsonForm.origin * 1 == 0 ? jsonForm.boughtValue * 1 : jsonForm.playerValue,
+      boughtPrice: jsonForm.origin * 1 === 0 ? jsonForm.boughtValue * 1 : jsonForm.playerValue,
       soldPrice: jsonForm.soldValue * 1
     };
 
@@ -561,65 +566,65 @@ const rzscript = (() => {
   };
 
   const getTaxesForm = () => {
-    return '<article style="padding-left:5px;">'
-      +'<h3>Calcular impuestos</h3>'
-      +'<div>'
-        +'<form class="js-calculate-tax">'
-          +'<table style="width:100%;">'
-            +'<tr>'
-              +'<td><span>Origen jugador</span></td>'
-              +'<td>'
-                +'<select name="origin">'
-                  +'<option value="0">Comprado</option>'
-                  +'<option value="1">Ex juvenil</option>'
-                  +'<option value="2">Original del club</option>'
-                +'</select>'
-              +'</td>'
-            +'</tr>'
-            +'<tr>'
-              +'<td><span>Valor jugador</span> <span style="color:#A3A30D;">*</span></td>'
-              +'<td><input type="text" name="playerValue" value="0" class="js-only-numbers"></td>'
-            +'</tr>'
-            +'<tr>'
-              +'<td><span>Edad jugador</span> <span style="color:#A3A30D;">*</span></td>'
-              +'<td>'
-                +'<select name="playerAge">'
-                  +'<option value="19">19</option>'
-                  +'<option value="20">20</option>'
-                  +'<option value="21">M&aacute;s de 20</option>'
-                +'</select>'
-              +'</td>'
-            +'</tr>'
-            +'<tr>'
-              +'<td><span>Valor compra</span> <span style="color:#FF043D;">*</span></td>'
-              +'<td><input type="text" name="boughtValue" class="js-only-numbers"></td>'
-            +'</tr>'
-            +'<tr>'
-              +'<td><span>Valor venta</span></td>'
-              +'<td><input type="text" name="soldValue" class="js-only-numbers"></td>'
-            +'</tr>'
-            +'<tr>'
-              +'<td><span>Fecha compra</span> <span style="color:#FF043D;">*</span></td>'
-              +'<td><input type="text" name="boughtDate" placeholder="dd-mm-aaaa"></td>'
-            +'</tr>'
-            +'<tr>'
-              +'<td><span>Fecha venta</span></td>'
-              +'<td><input type="text" name="soldDate" placeholder="dd-mm-aaaa"></td>'
-            +'</tr>'
-          +'</table>'
-          +'<div>'
-            +'<span style="color:#FF043D;">*</span> <span>Si el jugador fue comprado</span><br>'
-            +'<span style="color:#A3A30D;">*</span> <span>Si el jugador es original del club o ex juvenil</span>'
-          +'</div>'
-          +'<div style="margin-top:4px;">'
-            +'<button type="submit" class="quicklink"><span class="buttonClassMiddle">Calcular</span></button>'
-          +'</div>'
-          +'<div>'
-            +'<p class="js-tax-result"></p>'
-          +'</div>'
-        +'</form>'
-      +'</div>'
-    +'</article>';
+    return '<article style="padding-left:5px;">' +
+      '<h3>Calcular impuestos</h3>' +
+      '<div>' +
+        '<form class="js-calculate-tax">' +
+          '<table style="width:100%;">' +
+            '<tr>' +
+              '<td><span>Origen jugador</span></td>' +
+              '<td>' +
+                '<select name="origin">' +
+                  '<option value="0">Comprado</option>' +
+                  '<option value="1">Ex juvenil</option>' +
+                  '<option value="2">Original del club</option>' +
+                '</select>' +
+              '</td>' +
+            '</tr>' +
+            '<tr>' +
+              '<td><span>Valor jugador</span> <span style="color:#A3A30D;">*</span></td>' +
+              '<td><input type="text" name="playerValue" value="0" class="js-only-numbers"></td>' +
+            '</tr>' +
+            '<tr>' +
+              '<td><span>Edad jugador</span> <span style="color:#A3A30D;">*</span></td>' +
+              '<td>' +
+                '<select name="playerAge">' +
+                  '<option value="19">19</option>' +
+                  '<option value="20">20</option>' +
+                  '<option value="21">M&aacute;s de 20</option>' +
+                '</select>' +
+              '</td>' +
+            '</tr>' +
+            '<tr>' +
+              '<td><span>Valor compra</span> <span style="color:#FF043D;">*</span></td>' +
+              '<td><input type="text" name="boughtValue" class="js-only-numbers"></td>' +
+            '</tr>' +
+            '<tr>' +
+              '<td><span>Valor venta</span></td>' +
+              '<td><input type="text" name="soldValue" class="js-only-numbers"></td>' +
+            '</tr>' +
+            '<tr>' +
+              '<td><span>Fecha compra</span> <span style="color:#FF043D;">*</span></td>' +
+              '<td><input type="text" name="boughtDate" placeholder="dd-mm-aaaa"></td>' +
+            '</tr>' +
+            '<tr>' +
+              '<td><span>Fecha venta</span></td>' +
+              '<td><input type="text" name="soldDate" placeholder="dd-mm-aaaa"></td>' +
+            '</tr>' +
+          '</table>' +
+          '<div>' +
+            '<span style="color:#FF043D;">*</span> <span>Si el jugador fue comprado</span><br>' +
+            '<span style="color:#A3A30D;">*</span> <span>Si el jugador es original del club o ex juvenil</span>' +
+          '</div>' +
+          '<div style="margin-top:4px;">' +
+            '<button type="submit" class="quicklink"><span class="buttonClassMiddle">Calcular</span></button>' +
+          '</div>' +
+          '<div>' +
+            '<p class="js-tax-result"></p>' +
+          '</div>' +
+        '</form>' +
+      '</div>' +
+    '</article>';
   };
 
   const renderTaxCalculation = (ev) => {
@@ -632,9 +637,9 @@ const rzscript = (() => {
   const renderTaxCalculationButton = () => {
     let parent = document.querySelector('.dg_playerview_info');
     let container = parent.querySelector('p');
-    let html = '<a href="#" class="js-render-tax mzbtn buttondiv button_red">'
-      + '<span class="buttonClassMiddle" style="white-space:nowrap;">Impuestos</span><span class="buttonClassRight">&nbsp;</span>'
-    + '</a>';
+    let html = '<a href="#" class="js-render-tax mzbtn buttondiv button_red">' +
+      '<span class="buttonClassMiddle" style="white-space:nowrap;">Impuestos</span><span class="buttonClassRight">&nbsp;</span>' +
+    '</a>';
     container.insertAdjacentHTML('beforeend', html);
   };
 
@@ -660,63 +665,63 @@ const rzscript = (() => {
   };
 
   const getCCButtons = () => {
-    return '<div>'
-      + '<div class="mzbtn buttondiv button_account" title="Borrar texto del area de mensaje">'
-        +'<span class="buttonClassMiddle js-empty-post-textarea" style="white-space: nowrap">Vaciar</span><span class="buttonClassRight">&nbsp;</span>'
-      +'</div>'
-      + '<div class="js-icons-container">'
-        + '<img src="http://i.imgur.com/3YitWv3.gif" alt=">"/>&nbsp;'
-        + '<img src="http://i.imgur.com/Q3B4Dqz.gif" title="(y)" alt="(y)"/>&nbsp;'
-        + '<img src="http://i.imgur.com/vWFv3Gt.gif" title="(n)" alt="(n)"/>&nbsp;'
-        + '<img src="http://i.imgur.com/jaT1cb4.gif" height="20px" title="wtf" alt="wtf"/>&nbsp;'
-        + '<img src="http://i.imgur.com/VfbyDHO.gif" height="20px" title="fail" alt="fail"/>&nbsp;'
-        + '<img src="http://i.imgur.com/cheJFuk.gif" height="20px" title="repost" alt="repost"/>&nbsp;'
-        + '<img src="http://i.imgur.com/jDjyKTf.gif" title="cri" alt="cri"/>&nbsp;'
-        + '<img src="http://i.imgur.com/6PopX5q.gif" title="ha-ha" alt="ha-ha"/>'
-        + '<img src="http://i.imgur.com/nRp5BpE.gif" title=":)" alt=":)"/>&nbsp;'
-        + '<img src="http://i.imgur.com/CcuKTNz.gif" title=":D" alt=":D"/>&nbsp;'
-        + '<img src="http://i.imgur.com/Dfl5ZGS.gif" title="D" alt="D"/>&nbsp;'
-        + '<img src="http://i.imgur.com/8t9ZJse.gif" title="xD" alt="xD"/>&nbsp;'
-        + '<img src="http://i.imgur.com/1kJhHCs.gif" title=":/" alt=":/"/>&nbsp;'
-        + '<img src="http://i.imgur.com/1ncAraF.gif" title=":(" alt=":("/>&nbsp;'
-        + '<img src="http://i.imgur.com/xp6xUJJ.gif" title=":*(" alt=":*("/>&nbsp;'
-        + '<img src="http://i.imgur.com/qOigaWi.png" title=":S" alt=":S"/>&nbsp;'
-        + '<img src="http://i.imgur.com/nITjZn5.gif" title="erm" alt="erm"/>&nbsp;'
-        + '<img src="http://i.imgur.com/rSqmTPO.gif" title="8-)" alt="8-)"/>&nbsp;'
-        + '<img src="http://i.imgur.com/qP1rAQ5.png" title="¬¬" alt="¬¬"/>&nbsp;'
-        + '<img src="http://i.imgur.com/HdNdWN0.png" title="porfi" alt="porfi"/>&nbsp;'
-        + '<img src="http://i.imgur.com/QuXS7fE.gif" title="O.O" alt="O.O"/>&nbsp;'
-        + '<img src="http://i.imgur.com/RUQN2Hy.gif" title="_hm" alt="_hm"/>&nbsp;'
-        + '<img src="http://i.imgur.com/QLCdFIE.gif" title=">:(" alt=">:("/>&nbsp;'
-        + '<img src="http://i.imgur.com/55sAO1r.gif" title=">:)" alt=">:)"/>&nbsp;'
-        + '<img src="http://i.imgur.com/KbQOSgw.gif" title="flirt" alt="flirt"/>&nbsp;'
-        + '<img src="http://i.imgur.com/t5dALqK.gif" title=":P" alt=":P"/>&nbsp;'
-        + '<img src="http://i.imgur.com/zpY2A6I.gif" title="|-(" alt="|-("/>&nbsp;'
-        + '<img src="http://i.imgur.com/yPtUjin.gif" title=";)" alt=";)"/>&nbsp;'
-        + '<img src="http://i.imgur.com/OOsLDaW.gif" title="(h)" alt="(h)"/>&nbsp;'
-        + '<img src="http://i.imgur.com/LdCQyai.png" title="u.u" alt="u.u"/>&nbsp;'
-        + '<img src="http://i.imgur.com/KnhAURP.gif" title="shh" alt="shh"/>&nbsp;'
-        + '<img src="http://i.imgur.com/BzPDfzF.gif" title="nana" alt="nana"/>'
-        + '<img src="http://i.imgur.com/XEHiXuO.gif" height="23px" title="rock" alt="rock"/>'
-        + '<img src="http://i.imgur.com/CsCrOnE.gif" title="grr" alt="grr"/>&nbsp;'
-        + '<img src="http://i.imgur.com/K2d1Mbv.gif" height="23px" title="jaja" alt="jaja"/>'
-        + '<img src="http://i.imgur.com/SMcjsnf.gif" title="eah" alt="eah"/>'
-        + '<img src="http://i.imgur.com/aaPvRo4.gif" title="clap" alt="clap"/>'
-        + '<img src="http://i.imgur.com/av8bxvU.gif" title="bla" alt="bla"/>'
-        + '<img src="http://i.imgur.com/oQYWBTO.gif" title="l" alt="l"/>&nbsp;'
-        + '<img src="http://i.imgur.com/z64hDgz.gif" title="grr" alt="grr"/>&nbsp;'
-        + '<img src="http://i.imgur.com/NA84WqF.gif" title="angel" alt="angel"/>&nbsp;'
-        + '<img src="http://i.imgur.com/N2cdFNy.gif" title="diablo" alt="diablo"/>&nbsp;'
-        + '<img src="http://i.imgur.com/YWe8hno.gif" title="baba" alt="baba"/>'
-        + '<img src="http://i.imgur.com/1t7YpCo.gif" height="23px" title="x)" alt="x)"/>&nbsp;'
-        + '<img src="http://i.imgur.com/UR5t0o6.gif" title="plz" alt="plz"/>&nbsp;'
-        + '<img src="http://i.imgur.com/KKx3thu.gif" title="umm" alt="umm"/>'
-        + '<img src="http://i.imgur.com/sC8Mgmi.gif" title="facepalm" alt="facepalm"/>&nbsp;'
-        + '<img src="http://i.imgur.com/gJw92DZ.gif title="zzz" alt="zzz"/>'
-        + '<img src="http://i.imgur.com/RzjaSKr.gif" title="om" alt="om"/>'
-        + '<img src="http://i.imgur.com/7iCxtYD.gif" title="uh" alt="uh"/>'
-      + '</div>'
-    +'</div>';
+    return '<div>' +
+      '<div class="mzbtn buttondiv button_account" title="Borrar texto del area de mensaje">' +
+        '<span class="buttonClassMiddle js-empty-post-textarea" style="white-space: nowrap">Vaciar</span><span class="buttonClassRight">&nbsp;</span>' +
+      '</div>' +
+      '<div class="js-icons-container">' +
+        '<img src="https://i.imgur.com/3YitWv3.gif" alt=">"/>&nbsp;' +
+        '<img src="https://i.imgur.com/Q3B4Dqz.gif" title="(y)" alt="(y)"/>&nbsp;' +
+        '<img src="https://i.imgur.com/vWFv3Gt.gif" title="(n)" alt="(n)"/>&nbsp;' +
+        '<img src="https://i.imgur.com/jaT1cb4.gif" height="20px" title="wtf" alt="wtf"/>&nbsp;' +
+        '<img src="https://i.imgur.com/VfbyDHO.gif" height="20px" title="fail" alt="fail"/>&nbsp;' +
+        '<img src="https://i.imgur.com/cheJFuk.gif" height="20px" title="repost" alt="repost"/>&nbsp;' +
+        '<img src="https://i.imgur.com/jDjyKTf.gif" title="cri" alt="cri"/>&nbsp;' +
+        '<img src="https://i.imgur.com/6PopX5q.gif" title="ha-ha" alt="ha-ha"/>' +
+        '<img src="https://i.imgur.com/nRp5BpE.gif" title=":)" alt=":)"/>&nbsp;' +
+        '<img src="https://i.imgur.com/CcuKTNz.gif" title=":D" alt=":D"/>&nbsp;' +
+        '<img src="https://i.imgur.com/Dfl5ZGS.gif" title="D" alt="D"/>&nbsp;' +
+        '<img src="https://i.imgur.com/8t9ZJse.gif" title="xD" alt="xD"/>&nbsp;' +
+        '<img src="https://i.imgur.com/1kJhHCs.gif" title=":/" alt=":/"/>&nbsp;' +
+        '<img src="https://i.imgur.com/1ncAraF.gif" title=":(" alt=":("/>&nbsp;' +
+        '<img src="https://i.imgur.com/xp6xUJJ.gif" title=":*(" alt=":*("/>&nbsp;' +
+        '<img src="https://i.imgur.com/qOigaWi.png" title=":S" alt=":S"/>&nbsp;' +
+        '<img src="https://i.imgur.com/nITjZn5.gif" title="erm" alt="erm"/>&nbsp;' +
+        '<img src="https://i.imgur.com/rSqmTPO.gif" title="8-)" alt="8-)"/>&nbsp;' +
+        '<img src="https://i.imgur.com/qP1rAQ5.png" title="¬¬" alt="¬¬"/>&nbsp;' +
+        '<img src="https://i.imgur.com/HdNdWN0.png" title="porfi" alt="porfi"/>&nbsp;' +
+        '<img src="https://i.imgur.com/QuXS7fE.gif" title="O.O" alt="O.O"/>&nbsp;' +
+        '<img src="https://i.imgur.com/RUQN2Hy.gif" title="_hm" alt="_hm"/>&nbsp;' +
+        '<img src="https://i.imgur.com/QLCdFIE.gif" title=">:(" alt=">:("/>&nbsp;' +
+        '<img src="https://i.imgur.com/55sAO1r.gif" title=">:)" alt=">:)"/>&nbsp;' +
+        '<img src="https://i.imgur.com/KbQOSgw.gif" title="flirt" alt="flirt"/>&nbsp;' +
+        '<img src="https://i.imgur.com/t5dALqK.gif" title=":P" alt=":P"/>&nbsp;' +
+        '<img src="https://i.imgur.com/zpY2A6I.gif" title="|-(" alt="|-("/>&nbsp;' +
+        '<img src="https://i.imgur.com/yPtUjin.gif" title=";)" alt=";)"/>&nbsp;' +
+        '<img src="https://i.imgur.com/OOsLDaW.gif" title="(h)" alt="(h)"/>&nbsp;' +
+        '<img src="https://i.imgur.com/LdCQyai.png" title="u.u" alt="u.u"/>&nbsp;' +
+        '<img src="https://i.imgur.com/KnhAURP.gif" title="shh" alt="shh"/>&nbsp;' +
+        '<img src="https://i.imgur.com/BzPDfzF.gif" title="nana" alt="nana"/>' +
+        '<img src="https://i.imgur.com/XEHiXuO.gif" height="23px" title="rock" alt="rock"/>' +
+        '<img src="https://i.imgur.com/CsCrOnE.gif" title="grr" alt="grr"/>&nbsp;' +
+        '<img src="https://i.imgur.com/K2d1Mbv.gif" height="23px" title="jaja" alt="jaja"/>' +
+        '<img src="https://i.imgur.com/SMcjsnf.gif" title="eah" alt="eah"/>' +
+        '<img src="https://i.imgur.com/aaPvRo4.gif" title="clap" alt="clap"/>' +
+        '<img src="https://i.imgur.com/av8bxvU.gif" title="bla" alt="bla"/>' +
+        '<img src="https://i.imgur.com/oQYWBTO.gif" title="l" alt="l"/>&nbsp;' +
+        '<img src="https://i.imgur.com/z64hDgz.gif" title="grr" alt="grr"/>&nbsp;' +
+        '<img src="https://i.imgur.com/NA84WqF.gif" title="angel" alt="angel"/>&nbsp;' +
+        '<img src="https://i.imgur.com/N2cdFNy.gif" title="diablo" alt="diablo"/>&nbsp;' +
+        '<img src="https://i.imgur.com/YWe8hno.gif" title="baba" alt="baba"/>' +
+        '<img src="https://i.imgur.com/1t7YpCo.gif" height="23px" title="x)" alt="x)"/>&nbsp;' +
+        '<img src="https://i.imgur.com/UR5t0o6.gif" title="plz" alt="plz"/>&nbsp;' +
+        '<img src="https://i.imgur.com/KKx3thu.gif" title="umm" alt="umm"/>' +
+        '<img src="https://i.imgur.com/sC8Mgmi.gif" title="facepalm" alt="facepalm"/>&nbsp;' +
+        '<img src="https://i.imgur.com/gJw92DZ.gif title="zzz" alt="zzz"/>' +
+        '<img src="https://i.imgur.com/RzjaSKr.gif" title="om" alt="om"/>' +
+        '<img src="https://i.imgur.com/7iCxtYD.gif" title="uh" alt="uh"/>' +
+      '</div>' +
+    '</div>';
   };
 
   const postItem = (html) => {
@@ -762,9 +767,9 @@ const rzscript = (() => {
       let authorName = authorContainer.innerHTML;
       let badgeContainer = posts[i].querySelector('.forum-post-badges');
       let authorTeamId = badgeContainer.querySelector('img').src.split('=')[1].replace('&sport', '');
-      let html = '<a class="quicklink" href="/?p=guestbook&uid=' + authorId + '" title="' + titles[0] + '">' + texts[0] + '</a>'
-        + '<a class="quicklink" href="?p=forum&sub=search&search_keywords=&search_keyword_type=any&search_author=' + authorName + '&search_forum=' + forum + '&search_range=7&search_sort_by=post_date&search_sort_order=desc" title="' + titles[1] + '">' + texts[1] + '</a>'
-        + '<a class="quicklink" href="?p=team&sub=challenge&tid=' + authorTeamId + '" title="' + titles[2] + '">' + texts[2] + '</a>';
+      let html = '<a class="quicklink" href="/?p=guestbook&uid=' + authorId + '" title="' + titles[0] + '">' + texts[0] + '</a>' +
+        '<a class="quicklink" href="?p=forum&sub=search&search_keywords=&search_keyword_type=any&search_author=' + authorName + '&search_forum=' + forum + '&search_range=7&search_sort_by=post_date&search_sort_order=desc" title="' + titles[1] + '">' + texts[1] + '</a>' +
+        '<a class="quicklink" href="?p=team&sub=challenge&tid=' + authorTeamId + '" title="' + titles[2] + '">' + texts[2] + '</a>';
       author.insertAdjacentHTML('beforeend', html);
     }
   };
@@ -789,6 +794,7 @@ const rzscript = (() => {
     } else if (url.indexOf('players&pid') > -1) {
       renderTaxCalculationButton();
     }
+    renderCupCountryAndDivChecker();
   };
 
   const setEvents = () => {
