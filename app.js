@@ -57,52 +57,49 @@ const rzscript = (() => {
     }
     let html = '<div ' + (data.selector.charAt(0) == '.' ? 'class' : 'id') + '="' + data.selector.replace(/\./g,'') + '">';
     html += data.links.reduce((prev, curr) => {
-      let target = curr.url.indexOf('?p=') < 0 ? ' target="_blank"' : '';
-      return prev + '<a class="quicklink" href="' + (curr.url) + '"' + (target) + ' title="' + (curr.title) + '">' + (curr.text) + '</a>';
+      return prev + '<a class="quicklink" href="' + (curr.url) + '"' + (curr.url.indexOf('?p=') < 0 ? ' target="_blank"' : '') + ' title="' + (curr.title) + '">' + (curr.text) + '</a>';
     },'');
     html += '</div>';
     data.wrapper.insertAdjacentHTML(data.prepend ? 'afterbegin' : 'beforeend', html);
   };
 
   const createForumLinks = () => {
-    const links = [
-      { text: 'MER', title: 'Mercado(Transfers)', url: '?p=forum&sub=topics&forum_id=254&sport=soccer' },
-      { text: 'AMI', title: 'Amistosos', url: '?p=forum&sub=topics&forum_id=249&sport=soccer' },
-      { text: 'MZH', title: 'MZ Habla', url: '?p=forum&sub=topics&forum_id=253&sport=soccer' },
-      { text: 'PYR', title: 'Preguntas y Respuestas', url: '?p=forum&sub=topics&forum_id=255&sport=soccer' },
-      { text: 'DA', title: 'Discusi&oacute;n Abierta', url: '?p=forum&sub=topics&forum_id=250&sport=soccer' },
-      { text: 'FED', title: 'Federaciones', url: '?p=forum&sub=topics&forum_id=251&sport=soccer' },
-      { text: 'HDC', title: 'Hablemos de copas', url: '?p=forum&sub=topics&forum_id=252&sport=soccer' }
-    ];
     const options = {
       selector: '.js-forum-buttons',
       wrapper: document.querySelector('#notifications-wrapper'),
-      links: links,
+      links: [
+        { text: 'MER', title: 'Mercado(Transfers)', url: '?p=forum&sub=topics&forum_id=254&sport=soccer' },
+        { text: 'AMI', title: 'Amistosos', url: '?p=forum&sub=topics&forum_id=249&sport=soccer' },
+        { text: 'MZH', title: 'MZ Habla', url: '?p=forum&sub=topics&forum_id=253&sport=soccer' },
+        { text: 'PYR', title: 'Preguntas y Respuestas', url: '?p=forum&sub=topics&forum_id=255&sport=soccer' },
+        { text: 'DA', title: 'Discusi&oacute;n Abierta', url: '?p=forum&sub=topics&forum_id=250&sport=soccer' },
+        { text: 'FED', title: 'Federaciones', url: '?p=forum&sub=topics&forum_id=251&sport=soccer' },
+        { text: 'HDC', title: 'Hablemos de copas', url: '?p=forum&sub=topics&forum_id=252&sport=soccer' }
+      ],
       prepend: false
     };
     createButtonLinks(options);
   };
 
   const createQuickLinks = () => {
-    const links = [
-      { text: 'Monitoreo', title: 'Monitoreo', url: '?p=transfer&sub=yourplayers' },
-      { text: 'Vista Alternativa', title: 'Ver Vista Alternativa', url: '?p=players&sub=alt' },
-      { text: 'Seguimiento', title: 'Ir a Seguimiento', url: '?p=shortlist' },
-      { text: 'Finanzas', title: 'Ver Finanzas', url: '?p=economy' },
-      { text: 'Mercado', title: 'Ver Mercado', url: '?p=transfer' },
-      { text: 'Jugados', title: 'Ver los Partidos Jugados', url: '?p=match&sub=played' },
-      { text: 'Pr&oacute;ximos', title: 'Ver los Pr&oacute;ximos Partidos', url: '?p=match&sub=scheduled' },
-      { text: 'T&aacute;cticas', title: 'Ir a T&aacute;cticas', url: '?p=tactics' },
-      { text: 'Lesiones/Sanciones', title: 'Ver Lesionados/Sancionados', url: '?p=players&sub=unavailable' },
-      { text: 'Reporte entr.', title: 'Ver el Reporte de Entrenamiento', url: '?p=training_report' },
-      { text: 'Entrenamiento', title: 'Ir al Entrenamiento General', url: '?p=training' },
-      { text: 'Skiller', title: 'Skiller MZ Player', url: 'http://mzplayer.se' },
-      { text: 'Imgur', title: 'Ir a Imgur', url: 'https://imgur.com/' }
-    ];
     const options = {
       selector: '.pagelinks .quicklinks',
       wrapper: document.querySelector('#contentDiv'),
-      links: links,
+      links: [
+        { text: 'Monitoreo', title: 'Monitoreo', url: '?p=transfer&sub=yourplayers' },
+        { text: 'Vista Alternativa', title: 'Ver Vista Alternativa', url: '?p=players&sub=alt' },
+        { text: 'Seguimiento', title: 'Ir a Seguimiento', url: '?p=shortlist' },
+        { text: 'Finanzas', title: 'Ver Finanzas', url: '?p=economy' },
+        { text: 'Mercado', title: 'Ver Mercado', url: '?p=transfer' },
+        { text: 'Jugados', title: 'Ver los Partidos Jugados', url: '?p=match&sub=played' },
+        { text: 'Pr&oacute;ximos', title: 'Ver los Pr&oacute;ximos Partidos', url: '?p=match&sub=scheduled' },
+        { text: 'T&aacute;cticas', title: 'Ir a T&aacute;cticas', url: '?p=tactics' },
+        { text: 'Lesiones/Sanciones', title: 'Ver Lesionados/Sancionados', url: '?p=players&sub=unavailable' },
+        { text: 'Reporte entr.', title: 'Ver el Reporte de Entrenamiento', url: '?p=training_report' },
+        { text: 'Entrenamiento', title: 'Ir al Entrenamiento General', url: '?p=training' },
+        { text: 'Skiller', title: 'Skiller MZ Player', url: 'http://mzplayer.se' },
+        { text: 'Imgur', title: 'Ir a Imgur', url: 'https://imgur.com/' }
+      ],
       prepend: true
     };
     createButtonLinks(options);
@@ -239,6 +236,8 @@ const rzscript = (() => {
   const playersMatchValue = () => {
     if (ajaxSport == 'soccer') {
       footballMatchValues();
+    } else if(ajaxSport == 'hockey') {
+      hockeyMatchValues();
     }
   };
 
@@ -248,7 +247,7 @@ const rzscript = (() => {
       return;
     }
     for (let i = 0; i < teamsDiv.length; i++) {
-      links = teamsDiv[i].querySelectorAll('a');
+      let links = teamsDiv[i].querySelectorAll('a');
       renderFootballTeamValue(links[0].href.split('&')[1].split('=')[1], i);
     }
   };
@@ -290,6 +289,82 @@ const rzscript = (() => {
     });
   };
 
+  const hockeyMatchValues = () => {
+    let teamsDiv = document.querySelectorAll('.team-table');
+    if (!teamsDiv) {
+      return;
+    }
+    for (let i = 0; i < teamsDiv.length; i++) {
+      let links = teamsDiv[i].querySelectorAll('a');
+      renderHockeyTeamValue(links[0].href.split('&')[1].split('=')[1], i);
+    }
+  };
+
+  const renderHockeyTeamValue = (teamId, teamOrder) => {
+    var tableIndex = teamOrder === 0 ? 0 : 2;
+    let teamTable = document.querySelectorAll('#match-statistics .hitlist_wrapper_background table')[tableIndex];
+    if (!teamTable) {
+      return;
+    }
+    const ajax = $.ajax({
+      url: '/xml/team_playerlist.php',
+      type: 'GET',
+      data: { sport_id: sports.indexOf(ajaxSport), team_id: teamId }
+    });
+    ajax.done((data) => {
+      const currency = data.getElementsByTagName('TeamPlayers')[0].getAttribute('teamCurrency');
+      let playing21Value = 0, playing21 = 0;
+      let firstRow = teamTable.rows[0];
+      let secondRow = teamTable.rows[1], tableBody = teamTable.querySelector('tbody');
+      let tableFoot = teamTable.querySelector('tfoot'), totalsRow = tableFoot.rows[1];
+      firstRow.cells[0].colSpan = 10;
+      teamTable.rows[2].cells[0].colSpan = 19;
+      secondRow.innerHTML = '<td>Valor</td>' + secondRow.innerHTML;
+      let goalkeeperTable = document.querySelectorAll('#match-statistics .hitlist_wrapper_background table')[tableIndex + 1];
+      let goalkeeperLink = goalkeeperTable.querySelector('a');
+      let goalkeeperData = getPlayerData(data, goalkeeperLink.href.split('&')[1].split('=')[1]);
+      let goalkeeperValue = 0;
+      if (goalkeeperData) {
+        goalkeeperValue = toLocaleCurrency(goalkeeperData.getAttribute('value'), currency);
+      }
+      for (let i = 0; i < tableBody.rows.length; i++) {
+        if (tableBody.rows[i].querySelector('img')) {
+          tableBody.rows[i].cells[0].colSpan = '19';
+        } else {
+          if (tableBody.rows[i].cells[0] !== '') {
+            let link = tableBody.rows[i].querySelector('a');
+            if (link) {
+              let playerData = getPlayerData(data, link.href.split('&')[1].split('=')[1]);
+              if (playerData) {
+                let playerValue = toLocaleCurrency(playerData.getAttribute('value'), currency);
+                playing21 += 1;
+                tableBody.rows[i].innerHTML = '<td style="width:62px;text-align:right;padding-right:15px">' + (formatMoney(playerValue)) + '</td>' + tableBody.rows[i].innerHTML;
+                if (playing21 < 21) {
+                  playing21Value += playerValue;
+                }
+              }
+            } else {
+              tableBody.rows[i].innerHTML = '<td style="width:62px;text-align:right;padding-right:15px"></td>' + tableBody.rows[i].innerHTML;
+            }
+          } else if (tableBody.rows[i].cells < 2) {
+            tableBody.rows[i].innerHTML = '<td style="width:62px;text-align:right;padding-right:15px"></td>' + tableBody.rows[i].innerHTML;
+          }
+        }
+      }
+      totalsRow.innerHTML = '<td style="width:62px;text-align:right;padding-right:15px">' +
+        (formatMoney(playing21Value + goalkeeperValue) + '<br><small>Incluye valor de portero</small>') +
+        '</td>' +
+        totalsRow.innerHTML;
+      tableFoot.rows[3].cells[0].colSpan = '19';
+
+      let goalkeeperTableHead = goalkeeperTable.querySelector('thead');
+      goalkeeperTableHead.rows[0].innerHTML = '<td>Valor</td>' + goalkeeperTableHead.rows[0].innerHTML;
+      let goalkeeperTableBody = goalkeeperTable.querySelector('tbody');
+      goalkeeperTableBody.rows[0].innerHTML = '<td style="width:62px;text-align:right;padding-right:15px">' + (formatMoney(goalkeeperValue)) + '</td>' + goalkeeperTableBody.rows[0].innerHTML;
+      goalkeeperTable.querySelector('tfoot').rows[0].cells[0].colSpan = '19';
+    });
+  };
+
   const previewResultsButton = () => {
     let container = document.querySelector('#results-fixtures-header');
     const html =
@@ -306,32 +381,35 @@ const rzscript = (() => {
       let tacticWrapper = $.trim(matches[i].querySelector('.set-default-wrapper').innerHTML);
       if (tacticWrapper === '') {
         let matchId = scoreBlock.href.split('&')[2].split('=')[1];
-        const ajax = $.ajax({
-          url: '/xml/match_info.php',
-          type: 'GET',
-          data: { sport_id: sports.indexOf(ajaxSport), match_id: matchId }
-        });
-        (function (matchBlock) {
-          ajax.done((data) => {
-            if (!data.getElementsByTagName('ManagerZone_Error')[0]) {
-              let myTeamId = matchBlock.href.split('&')[3].split('=')[1];
-              let score = {
-                local: data.getElementsByTagName('Team')[0].getAttribute('goals') * 1,
-                visitor: data.getElementsByTagName('Team')[1].getAttribute('goals') * 1
-              };
-              matchBlock.innerHTML = score.local + ' - ' + score.visitor;
-              if (score.local == score.visitor) {
-                matchBlock.className = 'yellow';
-              } else if (myTeamId == data.getElementsByTagName('Team')[0].getAttribute('id')) {
-                matchBlock.className = score.local > score.visitor ? 'green' : 'red';
-              } else if (myTeamId == data.getElementsByTagName('Team')[1].getAttribute('id')) {
-                matchBlock.className = score.local > score.visitor ? 'red' : 'green';
-              }
-            }
-          });
-        })(scoreBlock);
+        renderMatchScore(matchId, scoreBlock);
       }
     }
+  };
+
+  const renderMatchScore = (matchId, matchBlock) => {
+    const ajax = $.ajax({
+      url: '/xml/match_info.php',
+      type: 'GET',
+      data: { sport_id: sports.indexOf(ajaxSport), match_id: matchId }
+    });
+    ajax.done((data) => {
+      if (data.getElementsByTagName('ManagerZone_Error')[0]) {
+        return;
+      }
+      let myTeamId = matchBlock.href.split('&')[3].split('=')[1];
+      let score = {
+        local: data.getElementsByTagName('Team')[0].getAttribute('goals') * 1,
+        visitor: data.getElementsByTagName('Team')[1].getAttribute('goals') * 1
+      };
+      matchBlock.innerHTML = score.local + ' - ' + score.visitor;
+      if (score.local == score.visitor) {
+        matchBlock.className = 'yellow';
+      } else if (myTeamId == data.getElementsByTagName('Team')[0].getAttribute('id')) {
+        matchBlock.className = score.local > score.visitor ? 'green' : 'red';
+      } else if (myTeamId == data.getElementsByTagName('Team')[1].getAttribute('id')) {
+        matchBlock.className = score.local > score.visitor ? 'red' : 'green';
+      }
+    });
   };
 
   // End matches data
@@ -347,28 +425,28 @@ const rzscript = (() => {
       return;
     }
     let containerSelector, clickedElementSelector, targetContainerSelector;
-    if (cups.indexOf(url[1]) > -1) {
+    if (url.indexOf('cup&sub') > -1) {
       containerSelector = '#cup-div';
       clickedElementSelector = '#ui-id-4';
       targetContainerSelector = '#group-stages';
-    } else if (friendlyLeagues.indexOf(url[1]) > -1) {
+    } else if (url.indexOf('friendlyseries&sub') > -1) {
       containerSelector = '#friendly-series-div';
       clickedElementSelector = '#ui-id-2';
       targetContainerSelector = '#ui-tabs-2';
-      if (url.indexOf('standings&fsid') > -1) {
-        setTimeout(() => {
-          renderDivAndCountryButton();
-        }, 1500);
-      }
+    }
+    if (typeof containerSelector === undefined) {
+      return;
     }
     $(document).on('click', '.js-view-div-country', () => {
       renderDivAndCountry(targetContainerSelector);
     });
-    $(containerSelector).on('click', clickedElementSelector, () => {
-      setTimeout(() => {
-        renderDivAndCountryButton();
-      }, 1500);
-    });
+    if (typeof clickedElementSelector !== undefined) {
+      $(containerSelector).on('click', clickedElementSelector, () => {
+        setTimeout(() => {
+          renderDivAndCountryButton();
+        }, 1500);
+      });
+    }
   };
 
   const renderDivAndCountryButton = () => {
@@ -407,7 +485,7 @@ const rzscript = (() => {
           container.insertAdjacentHTML('afterbegin', countryHtml);
         });
       })(link.parentNode);
-    }
+    } 
   };
 
   // End cups and FL
@@ -793,6 +871,10 @@ const rzscript = (() => {
       previewResultsButton();
     } else if (url.indexOf('players&pid') > -1) {
       renderTaxCalculationButton();
+    } else if (url.indexOf('standings&fsid') > -1) {
+      setTimeout(() => {
+        renderDivAndCountryButton();
+      }, 1500);
     }
     renderCupCountryAndDivChecker();
   };
