@@ -5,7 +5,7 @@
 // @homepage       https://github.com/rhonaldomaster/rzscript
 // @include        http*://*managerzone.*
 // @grant          none
-// @version        0.2
+// @version        0.1
 // @copyright      GNU/GPL v3
 // @author         rhonaldomaster | https://github.com/rhonaldomaster
 // @credits        c_c, serbocapo
@@ -32,7 +32,7 @@ const rzscript = (() => {
       '.preview-results{border:2px solid #2A4CB0;cursor:pointer;float:right;height:20px;padding:4px 0 0 4px;width:20px;}' +
       '.bbcode{margin:auto;max-width:640px;}' +
       '.player-image.soccer{position: relative;}' +
-      '.player-image.soccer .player-team-badge{background-position: center; height: auto; padding: 5px; position: absolute; right: 20px; top: 44px; width: auto;}';
+      '.player-image.soccer .player-team-badge{background-position: center; height: auto; padding: 5px; position: absolute; right: 24px; top: 44px; width: auto;}';
     if (typeof GM_addStyle != 'undefined') {
       GM_addStyle(css);
       return;
@@ -883,7 +883,10 @@ const rzscript = (() => {
   };
 
   const addTeamBadgeToPlayers = () => {
-    if (!window.location.href.includes('p=players') || window.location.href.indexOf('&') > -1) {
+    const currentPage = window.location.href;
+    if (!currentPage.includes('p=players')) {
+      return;
+    } else if (currentPage.includes('&') && currentPage.indexOf('&pid=') < 0) {
       return;
     }
 
