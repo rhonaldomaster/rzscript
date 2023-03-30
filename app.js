@@ -5,7 +5,7 @@
 // @homepage       https://github.com/rhonaldomaster/rzscript
 // @include        http*://*managerzone.*
 // @grant          none
-// @version        0.1
+// @version        0.2
 // @copyright      GNU/GPL v3
 // @author         rhonaldomaster | https://github.com/rhonaldomaster
 // @credits        c_c, serbocapo
@@ -19,6 +19,7 @@ const rzscript = (() => {
     createForumLinks();
     setPageFunctions();
     setEvents();
+    addTeamBadgeToPlayers();
   };
 
   const setStyles = () => {
@@ -29,7 +30,9 @@ const rzscript = (() => {
       '.quicklinks{text-align:center;}' +
       '#fluid-menu-opener > div.sport-line,#top-wrapper-sport-line{background:#5d5b5f none repeat scroll 0 0;}' +
       '.preview-results{border:2px solid #2A4CB0;cursor:pointer;float:right;height:20px;padding:4px 0 0 4px;width:20px;}' +
-      '.bbcode{margin:auto;max-width:640px;}';
+      '.bbcode{margin:auto;max-width:640px;}' +
+      '.player-image.soccer{position: relative;}' +
+      '.player-image.soccer .player-team-badge{background-position: center; height: auto; padding: 5px; position: absolute; right: 20px; top: 44px; width: auto;}';
     if (typeof GM_addStyle != 'undefined') {
       GM_addStyle(css);
       return;
@@ -98,7 +101,7 @@ const rzscript = (() => {
         { text: 'Reporte entr.', title: 'Ver el Reporte de Entrenamiento', url: '?p=training_report' },
         { text: 'Entrenamiento', title: 'Ir al Entrenamiento General', url: '?p=training' },
         { text: 'Skiller', title: 'Skiller MZ Player', url: 'http://mzplayer.se' },
-        { text: 'Imgur', title: 'Ir a Imgur', url: 'https://imgur.com/' }
+        { text: 'Top 11', title: 'Ir a top11', url: 'https://oxi.se/top11/' }
       ],
       prepend: true
     };
@@ -366,11 +369,11 @@ const rzscript = (() => {
   };
 
   const previewResultsButton = () => {
-    let container = document.querySelector('#results-fixtures-header');
+    let container = document.querySelector('#results-fixtures-wrapper');
     const html =
-      '<div class="preview-results js-preview-results">' +
-        '<img src="https://i.imgur.com/WL38HPq.png" title="Ver resultados" alt="Ver resultados"/>' +
-      '</div>';
+      '<button type="button" class="results-fixtures-type flex-grow-0 js-preview-results">' +
+        'Ver resultados' +
+      '</button>';
     container.insertAdjacentHTML('afterbegin', html);
   };
 
@@ -418,7 +421,7 @@ const rzscript = (() => {
   const renderCupCountryAndDivChecker = () => {
     const categories = ['private_cup&sub', 'cup&sub', 'u18', 'u21', 'u23', 'world', 'u18_world', 'friendlyseries&sub'];
     const url = window.location.href;
-    let appliesIn = categories.filter((elem) => {
+    let appliesIn = categories.filter((elem) => {
       return url.indexOf(elem) > -1;
     });
     if (appliesIn.length < 1) {
@@ -485,7 +488,7 @@ const rzscript = (() => {
           container.insertAdjacentHTML('afterbegin', countryHtml);
         });
       })(link.parentNode);
-    } 
+    }
   };
 
   // End cups and FL
@@ -622,7 +625,7 @@ const rzscript = (() => {
     tax.value = Math.round(profit * (tax.percentage / 100));
     return tax;
   };
-  
+
   const calculateTaxesAction = (ev) => {
     ev.preventDefault();
     let form = ev.target;
@@ -877,6 +880,27 @@ const rzscript = (() => {
       }, 1500);
     }
     renderCupCountryAndDivChecker();
+  };
+
+  const addTeamBadgeToPlayers = () => {
+    if (!window.location.href.includes('p=players') || window.location.href.indexOf('&') > -1) {
+      return;
+    }
+
+    const playerContainers = Array.prototype.slice.call(document.querySelectorAll('.player-image.soccer'));
+    let teamID = null;
+    let badgeHTML = '';
+    for (let i = 0; i < playerContainers.length; i++) {
+      const playerContainer = playerContainers[i];
+      const playerLink = playerContainer.closest('.playerContainer')?.querySelector('a.subheader')?.getAttribute('href');
+
+      if (!teamID) {
+        teamID = playerLink.split('&')[2].replace(/\D+/, '');
+        badgeHTML = `<div class="player-team-badge" style="background-image: url(dynimg/badge.php?team_id=${teamID}&sport=soccer&location=icon)"></div>`;
+      }
+
+      playerContainer.insertAdjacentHTML('afterbegin', badgeHTML);
+    }
   };
 
   const setEvents = () => {
