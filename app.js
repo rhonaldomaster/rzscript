@@ -7,8 +7,14 @@
 // @grant          none
 // @version        0.1
 // @copyright      GNU/GPL v3
-// @author         rhonaldomaster | https://github.com/rhonaldomaster
+// @author         rhonaldomaster
 // @credits        c_c, serbocapo
+// @license        GPL-3.0-or-later
+// @compatible chrome
+// @compatible firefox
+// @compatible opera
+// @compatible safari
+// @compatible edge
 // ==/UserScript==
 const rzscript = (() => {
   const sports = ['', 'soccer', 'hockey'];
